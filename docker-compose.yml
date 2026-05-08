@@ -1,0 +1,48 @@
+version: '3.9'
+services:
+ # ==================
+ # front (react / vite)
+ frontend:
+   build: ./frontend
+   container_name: fluxcolis_ui
+   restart: unless-stopped
+   ports: 
+     - "5173:5173"
+   depends_on:
+     - api
+   environment:
+     - VITE_API_URL: $(VITE_API_URL)
+
+  # ===================
+  # Back (Nestjs + prisma) 
+ api: 
+    build: ./backend
+    container_name: fluxcolis_api
+    restart: unless-stopped
+    ports:
+       - '3000:3000'
+    depends_on:
+       - db
+    env_file: 
+       - ./backend/.env
+    environment:
+       DATABASE_URL= ${DATABASE_URL}
+
+  # ===============================
+  # DB (postgreSQL)
+ db: 
+   image:postgres: 15
+   container_name: fluxcolis_db
+   restart: unless-stopped
+   environnement:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
+   ports:
+      - "5432:5432"
+   volumes:
+      - postgres_data:/var/lib/postgresql/data
+  # ====================================
+  # Volumes
+volumes:
+   postgres_data: 
