@@ -10,9 +10,9 @@ services:
       - "5174:5174"
     depends_on:
       - api
-    environment:
-      VITE_API_URL: ${VITE_API_URL}
-
+    env_file:
+      - ./frontend/.env
+ 
   # ===================
   # BACKEND (NestJS + Prisma)
   api:
@@ -21,10 +21,11 @@ services:
     restart: unless-stopped
     ports:
       - "3000:3000"
+      - "5555:5555"
     depends_on:
       - db
     env_file:
-      - ./.env
+      - ./backend/.env
 
   # ===================
   # DATABASE (PostgreSQL)

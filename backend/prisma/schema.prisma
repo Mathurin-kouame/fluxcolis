@@ -70,5 +70,5 @@ model TrackingHistory {
   createdAt       DateTime               @default(now())
 
   parcelId        String 
-  parcel          Parcel                @relation(fields: [userId], references: [id], onDelete: cascade)
+  parcel          Parcel                 @relation(fields: [parcelId], references: [id], onDelete: Cascade)
 }
