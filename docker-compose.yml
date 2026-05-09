@@ -1,7 +1,5 @@
 services:
-
-  # ==================
-  # FRONTEND (React / Vite)
+ 
   frontend:
     build: ./frontend
     container_name: fluxcolis_ui
@@ -11,10 +9,11 @@ services:
     depends_on:
       - api
     env_file:
-      - ./frontend/.env
- 
-  # ===================
-  # BACKEND (NestJS + Prisma)
+      - .env
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+
   api:
     build: ./backend
     container_name: fluxcolis_api
@@ -25,24 +24,24 @@ services:
     depends_on:
       - db
     env_file:
-      - ./backend/.env
+      - .env
 
-  # ===================
-  # DATABASE (PostgreSQL)
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
+
   db:
     image: postgres:15
     container_name: fluxcolis_db
     restart: unless-stopped
     environment:
-      POSTGRES_USER: ${DB_USER}
-      POSTGRES_PASSWORD: ${DB_PASSWORD}
-      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_USER: ${POSTGRES_USE}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
     ports:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
-
-# ===================
-# VOLUMES
+ 
 volumes:
   postgres_data:
