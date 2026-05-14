@@ -40,4 +40,33 @@ export class ParcelsService {
 
     return `FLX-${Date.now()}-${random}`;
   }
+
+  async findAll(userId: string, role: string) {
+    if (role === 'ADMIN') {
+      return this.prisma.parcel.findMany({
+        orderBy: {
+          createdAt: 'desc',
+        },
+
+        include: {
+          user: {
+            select: {
+              id: true,
+              name: true,
+              email: true,
+            },
+          },
+        },
+      });
+    }
+    return this.prisma.parcel.findMany({
+      where: {
+        userId,
+      },
+
+      orderBy: {
+        createdAt: 'desc',
+      },
+    });
+  }
 }

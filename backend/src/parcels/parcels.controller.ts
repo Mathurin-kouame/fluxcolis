@@ -1,4 +1,11 @@
-import { Body, Controller, Post, Request, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Post,
+  Request,
+  UseGuards,
+} from '@nestjs/common';
 import { ParcelsService } from './parcels.service';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { CreateParcelDto } from './dto/create-parcel.dto';
@@ -15,5 +22,11 @@ export class ParcelsController {
     @Body() createParcelDto: CreateParcelDto,
   ) {
     return this.parcelsService.create(req.user.userId, createParcelDto);
+  }
+
+  @Get()
+  @UseGuards(JwtAuthGuard)
+  findAll(@Request() req: RequestWithUser) {
+    return this.parcelsService.findAll(req.user.userId, req.user.role);
   }
 }
