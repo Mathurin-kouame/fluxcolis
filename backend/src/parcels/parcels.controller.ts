@@ -3,6 +3,7 @@ import {
   Controller,
   Get,
   Param,
+  Patch,
   Post,
   Request,
   UseGuards,
@@ -11,6 +12,9 @@ import { ParcelsService } from './parcels.service';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { CreateParcelDto } from './dto/create-parcel.dto';
 import type { RequestWithUser } from 'src/auth/types/request-user.interface';
+import { RolesGuard } from 'src/auth/guards/roles.guard';
+import { Roles } from 'src/auth/decorators/roles.decorator';
+import { UpdateParcelStatusDto } from './dto/update-status.dto';
 
 @Controller('parcels')
 export class ParcelsController {
@@ -35,5 +39,15 @@ export class ParcelsController {
   @UseGuards(JwtAuthGuard)
   findOne(@Param('id') id: string, @Request() req: RequestWithUser) {
     return this.parcelsService.findOne(req.user.userId, id, req.user.role);
+  }
+
+  @Patch(':id/status')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('ADMIN')
+  updateStatus(
+    @Param('id') id: string,
+    @Body() updateParcelStatusDto: UpdateParcelStatusDto,
+  ) {
+    return this.parcelsService.updateStatus(id, updateParcelStatusDto.status);
   }
 }

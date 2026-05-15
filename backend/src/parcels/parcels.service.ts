@@ -5,6 +5,7 @@ import {
 } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateParcelDto } from './dto/create-parcel.dto';
+import { ParcelStatus } from '@prisma/client';
 
 @Injectable()
 export class ParcelsService {
@@ -101,5 +102,28 @@ export class ParcelsService {
     }
 
     return parcel;
+  }
+
+  // mise à jour de colis
+  async updateStatus(parcelId: string, status: ParcelStatus) {
+    const parcel = await this.prisma.parcel.findUnique({
+      where: {
+        id: parcelId,
+      },
+    });
+
+    if (!parcel) {
+      throw new NotFoundException('colis introuvable');
+    }
+
+    return this.prisma.parcel.update({
+      where: {
+        id: parcelId,
+      },
+
+      data: {
+        status,
+      },
+    });
   }
 }
