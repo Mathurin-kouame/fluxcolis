@@ -15,6 +15,7 @@ import type { RequestWithUser } from 'src/auth/types/request-user.interface';
 import { RolesGuard } from 'src/auth/guards/roles.guard';
 import { Roles } from 'src/auth/decorators/roles.decorator';
 import { UpdateParcelStatusDto } from './dto/update-status.dto';
+import { UpdateParcelDto } from './dto/update-parcel-dto';
 
 @Controller('parcels')
 export class ParcelsController {
@@ -49,5 +50,20 @@ export class ParcelsController {
     @Body() updateParcelStatusDto: UpdateParcelStatusDto,
   ) {
     return this.parcelsService.updateStatus(id, updateParcelStatusDto.status);
+  }
+
+  @Patch(':id')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  update(
+    @Param('id') id: string,
+    @Request() req: RequestWithUser,
+    @Body() updateParcelDto: UpdateParcelDto,
+  ) {
+    return this.parcelsService.updateParcel(
+      id,
+      req.user.userId,
+      req.user.role,
+      updateParcelDto,
+    );
   }
 }

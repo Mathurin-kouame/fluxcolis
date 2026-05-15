@@ -6,6 +6,7 @@ import {
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateParcelDto } from './dto/create-parcel.dto';
 import { ParcelStatus } from '@prisma/client';
+import { UpdateParcelDto } from './dto/update-parcel-dto';
 
 @Injectable()
 export class ParcelsService {
@@ -104,7 +105,7 @@ export class ParcelsService {
     return parcel;
   }
 
-  // mise à jour de colis
+  // update status parcel
   async updateStatus(parcelId: string, status: ParcelStatus) {
     const parcel = await this.prisma.parcel.findUnique({
       where: {
@@ -123,6 +124,42 @@ export class ParcelsService {
 
       data: {
         status,
+      },
+    });
+  }
+
+  // update parcel
+  async updateParcel(
+    parcelId: string,
+    userId: string,
+    role: string,
+    updateParcelDto: UpdateParcelDto,
+  ) {
+    const parcel = await this.prisma.parcel.findUnique({
+      where: { id: parcelId },
+    });
+
+    if (!parcel) {
+      throw new NotFoundException('Colis introuvable');
+    }
+
+    if (role !== 'ADMIN' && parcel.userId !== userId) {
+      throw new ForbiddenException('Accès refusé');
+    }
+
+    if (parcel.status === 'DELIVERED') {
+      throw new ForbiddenException('Colis déjà livré, modification impossible');
+    }
+
+    return this.prisma.parcel.update({
+      where: { id: parcelId },
+
+      data: {
+        description: updateParcelDto.description,
+        weight: updateParcelDto.weight,
+        destination: updateParcelDto.description,
+        recipientName: updateParcelDto.recipientName,
+        recipientPhone: updateParcelDto.recipientPhone,
       },
     });
   }
