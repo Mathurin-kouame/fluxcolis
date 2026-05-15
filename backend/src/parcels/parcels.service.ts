@@ -12,7 +12,7 @@ import { UpdateParcelDto } from './dto/update-parcel-dto';
 export class ParcelsService {
   constructor(private readonly prisma: PrismaService) {}
 
-  // CREATION DE COLIS
+  // Create employee
   async create(userId: string, createParcelDto: CreateParcelDto) {
     const user = await this.prisma.user.findUnique({
       where: {
@@ -76,7 +76,7 @@ export class ParcelsService {
     });
   }
 
-  //colis unique par employéé
+  //parcel for employee
   async findOne(userId: string, parcelId: string, role: string) {
     const parcel = await this.prisma.parcel.findUnique({
       where: {
@@ -162,5 +162,34 @@ export class ParcelsService {
         recipientPhone: updateParcelDto.recipientPhone,
       },
     });
+  }
+
+  //remove parcel
+  async removeParcel(parcelId: string, userId: string, role: string) {
+    const parcel = await this.prisma.parcel.findUnique({
+      where: { id: parcelId },
+    });
+
+    if (!parcel) {
+      throw new NotFoundException('colis introuvable');
+    }
+
+    if (role !== 'ADMIN' && parcel.userId !== userId) {
+      throw new ForbiddenException('Accès refusé');
+    }
+
+    if (parcel.status === 'DELIVERED') {
+      throw new ForbiddenException(
+        'suppression impossible pour un colis livré',
+      );
+    }
+
+    await this.prisma.parcel.delete({
+      where: {
+        id: parcelId,
+      },
+    });
+
+    return { message: 'colis supprimé avec succès' };
   }
 }

@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   Patch,
@@ -65,5 +66,11 @@ export class ParcelsController {
       req.user.role,
       updateParcelDto,
     );
+  }
+
+  @Delete(':id')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  remove(@Param('id') id: string, @Request() req: RequestWithUser) {
+    return this.parcelsService.removeParcel(id, req.user.userId, req.user.role);
   }
 }
