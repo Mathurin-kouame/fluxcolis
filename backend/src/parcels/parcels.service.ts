@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateParcelDto } from './dto/create-parcel.dto';
 
@@ -68,5 +72,34 @@ export class ParcelsService {
         createdAt: 'desc',
       },
     });
+  }
+
+  //colis unique par employéé
+  async findOne(userId: string, parcelId: string, role: string) {
+    const parcel = await this.prisma.parcel.findUnique({
+      where: {
+        id: parcelId,
+      },
+
+      include: {
+        user: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+          },
+        },
+      },
+    });
+
+    if (!parcel) {
+      throw new NotFoundException('Colis introuvable');
+    }
+
+    if (role !== 'ADMIN' && parcel.userId !== userId) {
+      throw new ForbiddenException('Accès refusé');
+    }
+
+    return parcel;
   }
 }

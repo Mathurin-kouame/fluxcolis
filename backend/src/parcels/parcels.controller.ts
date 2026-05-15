@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   Get,
+  Param,
   Post,
   Request,
   UseGuards,
@@ -28,5 +29,11 @@ export class ParcelsController {
   @UseGuards(JwtAuthGuard)
   findAll(@Request() req: RequestWithUser) {
     return this.parcelsService.findAll(req.user.userId, req.user.role);
+  }
+
+  @Get(':id')
+  @UseGuards(JwtAuthGuard)
+  findOne(@Param('id') id: string, @Request() req: RequestWithUser) {
+    return this.parcelsService.findOne(req.user.userId, id, req.user.role);
   }
 }
