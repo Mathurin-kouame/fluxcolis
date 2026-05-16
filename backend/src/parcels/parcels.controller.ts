@@ -71,6 +71,6 @@ export class ParcelsController {
   @Delete(':id')
   @UseGuards(JwtAuthGuard, RolesGuard)
   remove(@Param('id') id: string, @Request() req: RequestWithUser) {
-    return this.parcelsService.removeParcel(id, req.user.userId, req.user.role);
+    return this.parcelsService.removeParcel(id, req.user.role);
   }
 }

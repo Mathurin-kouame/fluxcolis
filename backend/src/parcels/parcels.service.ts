@@ -155,17 +155,25 @@ export class ParcelsService {
       where: { id: parcelId },
 
       data: {
-        description: updateParcelDto.description,
-        weight: updateParcelDto.weight,
-        destination: updateParcelDto.description,
-        recipientName: updateParcelDto.recipientName,
-        recipientPhone: updateParcelDto.recipientPhone,
+        ...(updateParcelDto.description && {
+          description: updateParcelDto.description,
+        }),
+        ...(updateParcelDto.weight && { weight: updateParcelDto.weight }),
+        ...(updateParcelDto.destination && {
+          destination: updateParcelDto.destination,
+        }),
+        ...(updateParcelDto.recipientName && {
+          recipientName: updateParcelDto.recipientName,
+        }),
+        ...(updateParcelDto.recipientPhone && {
+          recipientPhone: updateParcelDto.recipientPhone,
+        }),
       },
     });
   }
 
   //remove parcel
-  async removeParcel(parcelId: string, userId: string, role: string) {
+  async removeParcel(parcelId: string, role: string) {
     const parcel = await this.prisma.parcel.findUnique({
       where: { id: parcelId },
     });
@@ -174,8 +182,10 @@ export class ParcelsService {
       throw new NotFoundException('colis introuvable');
     }
 
-    if (role !== 'ADMIN' && parcel.userId !== userId) {
-      throw new ForbiddenException('Accès refusé');
+    if (role !== 'ADMIN') {
+      throw new ForbiddenException(
+        'seul un administrateur peut supprimer un colis',
+      );
     }
 
     if (parcel.status === 'DELIVERED') {
