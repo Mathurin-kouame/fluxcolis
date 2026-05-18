@@ -154,7 +154,7 @@ export class ParcelsService {
 
   // tracking timeline
 
-  async getTackingHistory(parcelId: string) {
+  async getTrackingHistory(parcelId: string) {
     const parcel = await this.prisma.parcel.findUnique({
       where: {
         id: parcelId,
@@ -249,5 +249,42 @@ export class ParcelsService {
     });
 
     return { message: 'colis supprimé avec succès' };
+  }
+
+  //create dashboard stats
+  async getDashboardStats() {
+    const total = await this.prisma.parcel.count();
+
+    const pending = await this.prisma.parcel.count({
+      where: {
+        status: 'PENDING',
+      },
+    });
+
+    const inTransit = await this.prisma.parcel.count({
+      where: {
+        status: 'IN_TRANSIT',
+      },
+    });
+
+    const delivered = await this.prisma.parcel.count({
+      where: {
+        status: 'DELIVERED',
+      },
+    });
+
+    const cancelled = await this.prisma.parcel.count({
+      where: {
+        status: 'CANCELLED',
+      },
+    });
+
+    return {
+      total,
+      pending,
+      inTransit,
+      delivered,
+      cancelled,
+    };
   }
 }

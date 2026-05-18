@@ -37,10 +37,11 @@ export class ParcelsController {
     return this.parcelsService.findAll(req.user.userId, req.user.role);
   }
 
-  @Get(':id')
-  @UseGuards(JwtAuthGuard)
-  findOne(@Param('id') id: string, @Request() req: RequestWithUser) {
-    return this.parcelsService.findOne(req.user.userId, id, req.user.role);
+  @Get('dashboard/stats')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('ADMIN')
+  getDashboardStats() {
+    return this.parcelsService.getDashboardStats();
   }
 
   @Patch(':id/status')
@@ -56,6 +57,18 @@ export class ParcelsController {
       updateParcelStatusDto.location,
       updateParcelStatusDto.note,
     );
+  }
+
+  @Get(':id/tracking')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  getTrackingHistory(@Param('id') id: string) {
+    return this.parcelsService.getTrackingHistory(id);
+  }
+
+  @Get(':id')
+  @UseGuards(JwtAuthGuard)
+  findOne(@Param('id') id: string, @Request() req: RequestWithUser) {
+    return this.parcelsService.findOne(req.user.userId, id, req.user.role);
   }
 
   @Patch(':id')
@@ -77,11 +90,5 @@ export class ParcelsController {
   @UseGuards(JwtAuthGuard, RolesGuard)
   remove(@Param('id') id: string, @Request() req: RequestWithUser) {
     return this.parcelsService.removeParcel(id, req.user.role);
-  }
-
-  @Get(':id/tracking')
-  @UseGuards(JwtAuthGuard, RolesGuard)
-  getTrackinHistory(@Param('id') id: string) {
-    return this.parcelsService.getTackingHistory(id);
   }
 }
