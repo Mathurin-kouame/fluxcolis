@@ -2,6 +2,7 @@ import {
   ForbiddenException,
   Injectable,
   NotFoundException,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateParcelDto } from './dto/create-parcel.dto';
@@ -106,7 +107,12 @@ export class ParcelsService {
   }
 
   // update status parcel
-  async updateStatus(parcelId: string, status: ParcelStatus) {
+  async updateStatus(
+    parcelId: string,
+    status: ParcelStatus,
+    location?: string,
+    note?: string,
+  ) {
     const parcel = await this.prisma.parcel.findUnique({
       where: {
         id: parcelId,
@@ -117,13 +123,55 @@ export class ParcelsService {
       throw new NotFoundException('colis introuvable');
     }
 
-    return this.prisma.parcel.update({
+    return this.prisma.$transaction(async (tx) => {
+      //update parcel status
+      const updatedParcel = await tx.parcel.update({
+        where: {
+          id: parcelId,
+        },
+
+        data: {
+          status,
+        },
+      });
+
+      //create trackingHistory
+      const tracking = await tx.trackingHistory.create({
+        data: {
+          parcelId,
+          status,
+          location: location ?? 'Non defini',
+          note: note ?? null,
+        },
+      });
+
+      return {
+        parcel: updatedParcel,
+        tracking,
+      };
+    });
+  }
+
+  // tracking timeline
+
+  async getTackingHistory(parcelId: string) {
+    const parcel = await this.prisma.parcel.findUnique({
       where: {
         id: parcelId,
       },
+    });
 
-      data: {
-        status,
+    if (!parcel) {
+      throw new UnauthorizedException('colis introvable');
+    }
+
+    return this.prisma.trackingHistory.findMany({
+      where: {
+        parcelId,
+      },
+
+      orderBy: {
+        createdAt: 'asc',
       },
     });
   }

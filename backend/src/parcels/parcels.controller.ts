@@ -50,7 +50,12 @@ export class ParcelsController {
     @Param('id') id: string,
     @Body() updateParcelStatusDto: UpdateParcelStatusDto,
   ) {
-    return this.parcelsService.updateStatus(id, updateParcelStatusDto.status);
+    return this.parcelsService.updateStatus(
+      id,
+      updateParcelStatusDto.status,
+      updateParcelStatusDto.location,
+      updateParcelStatusDto.note,
+    );
   }
 
   @Patch(':id')
@@ -72,5 +77,11 @@ export class ParcelsController {
   @UseGuards(JwtAuthGuard, RolesGuard)
   remove(@Param('id') id: string, @Request() req: RequestWithUser) {
     return this.parcelsService.removeParcel(id, req.user.role);
+  }
+
+  @Get(':id/tracking')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  getTrackinHistory(@Param('id') id: string) {
+    return this.parcelsService.getTackingHistory(id);
   }
 }
