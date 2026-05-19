@@ -2,7 +2,6 @@ import {
   ForbiddenException,
   Injectable,
   NotFoundException,
-  UnauthorizedException,
 } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateParcelDto } from './dto/create-parcel.dto';
@@ -22,7 +21,7 @@ export class ParcelsService {
     });
 
     if (!user) {
-      throw new NotFoundException('utilisateur non trouveé !');
+      throw new NotFoundException('Utilisateur non trouvé !');
     }
 
     const trackingNumber = this.generateTrackingNumber();
@@ -120,7 +119,7 @@ export class ParcelsService {
     });
 
     if (!parcel) {
-      throw new NotFoundException('colis introuvable');
+      throw new NotFoundException('Colis introuvable');
     }
 
     return this.prisma.$transaction(async (tx) => {
@@ -162,7 +161,7 @@ export class ParcelsService {
     });
 
     if (!parcel) {
-      throw new UnauthorizedException('colis introvable');
+      throw new NotFoundException('Colis introuvable');
     }
 
     return this.prisma.trackingHistory.findMany({
@@ -227,18 +226,18 @@ export class ParcelsService {
     });
 
     if (!parcel) {
-      throw new NotFoundException('colis introuvable');
+      throw new NotFoundException('Colis introuvable');
     }
 
     if (role !== 'ADMIN') {
       throw new ForbiddenException(
-        'seul un administrateur peut supprimer un colis',
+        'Seul un administrateur peut supprimer un colis',
       );
     }
 
     if (parcel.status === 'DELIVERED') {
       throw new ForbiddenException(
-        'suppression impossible pour un colis livré',
+        'Suppression impossible pour un colis livré',
       );
     }
 
@@ -248,7 +247,7 @@ export class ParcelsService {
       },
     });
 
-    return { message: 'colis supprimé avec succès' };
+    return { message: 'Colis supprimé avec succès' };
   }
 
   //create dashboard stats
