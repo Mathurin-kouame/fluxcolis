@@ -65,6 +65,11 @@ export class ParcelsController {
     return this.parcelsService.getTrackingHistory(id);
   }
 
+  @Get('public/:trackingNumber')
+  publicTracking(@Param('trackingNumber') trackingNumber: string) {
+    return this.parcelsService.publicTracking(trackingNumber);
+  }
+
   @Get(':id')
   @UseGuards(JwtAuthGuard)
   findOne(@Param('id') id: string, @Request() req: RequestWithUser) {

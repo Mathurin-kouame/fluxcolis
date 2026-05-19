@@ -287,4 +287,27 @@ export class ParcelsService {
       cancelled,
     };
   }
+
+  async publicTracking(trackingNumber: string) {
+    const parcel = await this.prisma.parcel.findFirst({
+      where: {
+        trackingNumber,
+      },
+      include: {
+        trackingHistory: true,
+      },
+    });
+
+    if (!parcel) {
+      throw new NotFoundException('colis introuvable');
+    }
+
+    return {
+      trackingNumber: parcel.trackingNumber,
+      status: parcel.status,
+      destination: parcel.destination,
+      createdAt: parcel.createdAt,
+      history: parcel.trackingHistory,
+    };
+  }
 }

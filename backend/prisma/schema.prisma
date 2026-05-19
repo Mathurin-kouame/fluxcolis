@@ -51,7 +51,7 @@ model Parcel {
   userId           String             
   user             User               @relation(fields: [userId], references: [id])
 
-  trackingHistories  TrackingHistory[]
+ trackingHistory TrackingHistory[]
 }
 
 enum ParcelStatus {
