@@ -288,6 +288,7 @@ export class ParcelsService {
     };
   }
 
+  //Tracking public
   async publicTracking(trackingNumber: string) {
     const parcel = await this.prisma.parcel.findFirst({
       where: {
@@ -309,5 +310,25 @@ export class ParcelsService {
       createdAt: parcel.createdAt,
       history: parcel.trackingHistory,
     };
+  }
+
+  //get last parcels
+  async getLatestParcels() {
+    return await this.prisma.parcel.findMany({
+      take: 5,
+
+      orderBy: {
+        createdAt: 'desc',
+      },
+
+      select: {
+        id: true,
+        trackingNumber: true,
+        recipientName: true,
+        status: true,
+        destination: true,
+        createdAt: true,
+      },
+    });
   }
 }

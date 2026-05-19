@@ -70,6 +70,13 @@ export class ParcelsController {
     return this.parcelsService.publicTracking(trackingNumber);
   }
 
+  @Get('dashboard/latest')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('ADMIN')
+  getLatestParcels() {
+    return this.parcelsService.getLatestParcels();
+  }
+
   @Get(':id')
   @UseGuards(JwtAuthGuard)
   findOne(@Param('id') id: string, @Request() req: RequestWithUser) {
