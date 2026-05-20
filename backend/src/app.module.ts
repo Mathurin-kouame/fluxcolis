@@ -13,6 +13,7 @@ import { ParcelsModule } from './parcels/parcels.module';
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
+      envFilePath: '.env',
     }),
 
     AuthModule,
