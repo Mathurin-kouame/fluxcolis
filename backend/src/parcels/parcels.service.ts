@@ -12,16 +12,16 @@ import { UpdateParcelDto } from './dto/update-parcel-dto';
 export class ParcelsService {
   constructor(private readonly prisma: PrismaService) {}
 
-  // Create employee
-  async create(userId: string, createParcelDto: CreateParcelDto) {
-    const user = await this.prisma.user.findUnique({
+  // Create employee and assign
+  async create(createParcelDto: CreateParcelDto & { employeeId: string }) {
+    const employed = await this.prisma.user.findUnique({
       where: {
-        id: userId,
+        id: createParcelDto.employeeId,
       },
     });
 
-    if (!user) {
-      throw new NotFoundException('Utilisateur non trouvé !');
+    if (!employed) {
+      throw new NotFoundException('Employé assigné non trouvé !');
     }
 
     const trackingNumber = this.generateTrackingNumber();
@@ -37,16 +37,18 @@ export class ParcelsService {
         recipientPhone: createParcelDto.recipientPhone,
         destination: createParcelDto.destination,
 
-        userId,
+        userId: createParcelDto.employeeId,
       },
     });
   }
+  //Dashboard list ass employ
   private generateTrackingNumber() {
     const random = Math.floor(100000 + Math.random() * 900000);
 
     return `FLX-${Date.now()}-${random}`;
   }
 
+  //dashboard list All(Admin/employed)
   async findAll(userId: string, role: string) {
     if (role === 'ADMIN') {
       return this.prisma.parcel.findMany({
@@ -65,6 +67,8 @@ export class ParcelsService {
         },
       });
     }
+
+    // // Filtre strict pour l'employé
     return this.prisma.parcel.findMany({
       where: {
         userId,
@@ -76,7 +80,7 @@ export class ParcelsService {
     });
   }
 
-  //parcel for employee
+  //  RECHERCHE / SÉCURITÉ : Consulter un colis spécifique
   async findOne(userId: string, parcelId: string, role: string) {
     const parcel = await this.prisma.parcel.findUnique({
       where: {
@@ -108,6 +112,8 @@ export class ParcelsService {
   // update status parcel
   async updateStatus(
     parcelId: string,
+    userId: string,
+    role: string,
     status: ParcelStatus,
     location?: string,
     note?: string,
@@ -120,6 +126,11 @@ export class ParcelsService {
 
     if (!parcel) {
       throw new NotFoundException('Colis introuvable');
+    }
+
+    // SÉCURITÉ : L'employé ne peut modifier que son colis assigné
+    if (role !== 'ADMIN' && parcel.userId !== userId) {
+      throw new ForbiddenException('Modification réfusée');
     }
 
     return this.prisma.$transaction(async (tx) => {
@@ -151,27 +162,63 @@ export class ParcelsService {
     });
   }
 
-  // tracking timeline
-
-  async getTrackingHistory(parcelId: string) {
+  //Recherche par suivi /Scan
+  async findByTrackingNumber(
+    trackingNumber: string,
+    userId: string,
+    role: string,
+  ) {
     const parcel = await this.prisma.parcel.findUnique({
       where: {
-        id: parcelId,
+        trackingNumber,
+      },
+      include: {
+        trackingHistory: true,
       },
     });
 
     if (!parcel) {
-      throw new NotFoundException('Colis introuvable');
+      throw new NotFoundException('colis non trouvé avec ce numéro');
+    }
+
+    if (role !== 'ADMIN' && parcel.userId !== userId) {
+      throw new ForbiddenException('ce coli est assigné à un autre employé');
+    }
+
+    return parcel;
+  }
+
+  //Réassignation de coli(ADMIN)
+  async reassignParcel(parcelId: string, employedId: string) {
+    const employed = await this.prisma.user.findUnique({
+      where: {
+        id: employedId,
+      },
+    });
+
+    if (!employed) {
+      throw new NotFoundException('Employé introuvable');
+    }
+
+    return this.prisma.parcel.update({
+      where: { id: parcelId },
+      data: { userId: employedId },
+    });
+  }
+
+  // Recherché un coli par son numéro
+  async getTrackingHistory(parcelId: string) {
+    const parcel = await this.prisma.parcel.findUnique({
+      where: { id: parcelId },
+    });
+
+    if (!parcel) {
+      throw new NotFoundException('Aucun colis trouvé avec ce numéro');
     }
 
     return this.prisma.trackingHistory.findMany({
-      where: {
-        parcelId,
-      },
-
-      orderBy: {
-        createdAt: 'asc',
-      },
+      where: { parcelId },
+      orderBy: { createdAt: 'asc' },
     });
   }
 
@@ -250,8 +297,8 @@ export class ParcelsService {
     return { message: 'Colis supprimé avec succès' };
   }
 
-  //create dashboard stats
-  async getDashboardStats() {
+  // dashboard stats Admin
+  async getAdminDashboardStats() {
     const total = await this.prisma.parcel.count();
 
     const pending = await this.prisma.parcel.count({
@@ -274,6 +321,49 @@ export class ParcelsService {
 
     const cancelled = await this.prisma.parcel.count({
       where: {
+        status: 'CANCELLED',
+      },
+    });
+
+    return {
+      total,
+      pending,
+      inTransit,
+      delivered,
+      cancelled,
+    };
+  }
+
+  // dashboard stats Employee
+  async getEmployeeDashboardStats(userId: string) {
+    const total = await this.prisma.parcel.count({
+      where: { userId },
+    });
+
+    const pending = await this.prisma.parcel.count({
+      where: {
+        userId,
+        status: 'PENDING',
+      },
+    });
+
+    const inTransit = await this.prisma.parcel.count({
+      where: {
+        userId,
+        status: 'IN_TRANSIT',
+      },
+    });
+
+    const delivered = await this.prisma.parcel.count({
+      where: {
+        userId,
+        status: 'DELIVERED',
+      },
+    });
+
+    const cancelled = await this.prisma.parcel.count({
+      where: {
+        userId,
         status: 'CANCELLED',
       },
     });
@@ -312,10 +402,10 @@ export class ParcelsService {
   }
 
   //get last parcels
-  async getLatestParcels() {
+  async getLatestParcels(userId: string, role: string) {
     return await this.prisma.parcel.findMany({
       take: 5,
-
+      where: role === 'ADMIN' ? {} : { userId },
       orderBy: {
         createdAt: 'desc',
       },

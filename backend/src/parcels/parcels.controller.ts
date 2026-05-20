@@ -23,12 +23,13 @@ export class ParcelsController {
   constructor(private readonly parcelsService: ParcelsService) {}
 
   @Post()
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('ADMIN')
   create(
     @Request() req: RequestWithUser,
-    @Body() createParcelDto: CreateParcelDto,
+    @Body() createParcelDto: CreateParcelDto & { employeeId: string },
   ) {
-    return this.parcelsService.create(req.user.userId, createParcelDto);
+    return this.parcelsService.create(createParcelDto);
   }
 
   @Get()
@@ -37,32 +38,65 @@ export class ParcelsController {
     return this.parcelsService.findAll(req.user.userId, req.user.role);
   }
 
-  @Get('dashboard/stats')
+  @Get('search/:trackingNumber')
+  @UseGuards(JwtAuthGuard)
+  searchByTracking(
+    @Param('trackingNumber') trackingNumber: string,
+    @Request() req: RequestWithUser,
+  ) {
+    return this.parcelsService.findByTrackingNumber(
+      trackingNumber,
+      req.user.userId,
+      req.user.role,
+    );
+  }
+
+  @Get('dashboard/latest')
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('ADMIN')
-  getDashboardStats() {
-    return this.parcelsService.getDashboardStats();
+  getLatestParcels(@Request() req: RequestWithUser) {
+    return this.parcelsService.getLatestParcels(req.user.userId, req.user.role);
   }
 
   @Patch(':id/status')
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles('ADMIN')
+  @Roles('ADMIN', 'EMPLOYEE')
   updateStatus(
     @Param('id') id: string,
+    @Request() req: RequestWithUser,
     @Body() updateParcelStatusDto: UpdateParcelStatusDto,
   ) {
     return this.parcelsService.updateStatus(
       id,
+      req.user.userId,
+      req.user.role,
       updateParcelStatusDto.status,
       updateParcelStatusDto.location,
       updateParcelStatusDto.note,
     );
   }
 
-  @Get(':id/tracking')
+  // Réassignation d'un colis existant à un autre employé (Admin)
+  @Patch(':id/reassign')
   @UseGuards(JwtAuthGuard, RolesGuard)
-  getTrackingHistory(@Param('id') id: string) {
-    return this.parcelsService.getTrackingHistory(id);
+  @Roles('ADMIN')
+  reassign(@Param('id') id: string, @Body('employedId') employedId: string) {
+    return this.parcelsService.reassignParcel(id, employedId);
+  }
+
+  //Statistiques globales du système (Admin)
+  @Get('dashboard/stats')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('ADMIN')
+  getAdminDashboardStats() {
+    return this.parcelsService.getAdminDashboardStats();
+  }
+
+  @Get('employee/stats')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('ADMIN', 'EMPLOYEE')
+  getEmployeeStats(@Request() req: RequestWithUser) {
+    return this.parcelsService.getEmployeeDashboardStats(req.user.userId);
   }
 
   @Get('public/:trackingNumber')
@@ -70,13 +104,14 @@ export class ParcelsController {
     return this.parcelsService.publicTracking(trackingNumber);
   }
 
-  @Get('dashboard/latest')
-  @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles('ADMIN')
-  getLatestParcels() {
-    return this.parcelsService.getLatestParcels();
+  // Historique des étapes d'un colis
+  @Get(':id/tracking')
+  @UseGuards(JwtAuthGuard)
+  getTrackingHistory(@Param('id') id: string) {
+    return this.parcelsService.getTrackingHistory(id);
   }
 
+  // Consultation d'un colis (Protégé : l'employé doit être l'assigné)
   @Get(':id')
   @UseGuards(JwtAuthGuard)
   findOne(@Param('id') id: string, @Request() req: RequestWithUser) {
