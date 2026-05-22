@@ -80,8 +80,8 @@ export class ParcelsController {
   @Patch(':id/reassign')
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('ADMIN')
-  reassign(@Param('id') id: string, @Body('employedId') employedId: string) {
-    return this.parcelsService.reassignParcel(id, employedId);
+  reassign(@Param('id') id: string, @Body('employeeId') employeeId: string) {
+    return this.parcelsService.reassignParcel(id, employeeId);
   }
 
   //Statistiques globales du système (Admin)
