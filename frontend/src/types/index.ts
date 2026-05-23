@@ -9,7 +9,6 @@ export interface User {
   name: string;
   role: Role;
   createdAt: string;
-  updatedAt: string;
 }
 export interface Parcel {
   id: string;
