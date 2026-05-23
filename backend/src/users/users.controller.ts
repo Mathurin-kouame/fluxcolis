@@ -17,15 +17,15 @@ export class UsersController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.usersService.findOne(id);
-  }
-
-  @UseGuards(JwtAuthGuard)
   @Get('me')
   getMe(@Request() req: RequestWithUser) {
     const user = req.user;
     return user;
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get(':id')
+  findOne(@Param('id') id: string) {
+    return this.usersService.findOne(id);
   }
 }
