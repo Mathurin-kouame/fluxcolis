@@ -4,7 +4,7 @@ export const FeaturesSection = () => {
     return (
         <section className="max-w-7xl mx-auto px-6 pb-28">
             <div className=" text-center max-w-3xl mx-auto mb-16">
-                <span className="text-blue-600 semibold uppercase tracking-widest text-sm">Fonctionnalités</span>
+                <span className="text-blue-600 semibold uppercase tracking-widest text-sm font-bold">Fonctionnalités</span>
                 <h2 className=" text-3xl font-bold mt-4 mb-6">Tout ce qu'il vous faut pour gérer vos colis</h2>
                 <p>Des outils puissants pour simpplifier chaque étape de la gestion de vos livraisons</p>
             </div>
