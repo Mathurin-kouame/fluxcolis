@@ -8,13 +8,13 @@ export const getUsers = async (): Promise<User[]> => {
     return data;
 }
 
-export const getMe = async (): Promise<User[]> => {
-    const { data } = await api.get<User[]>("/users/me");
+export const getMe = async (): Promise<User> => {
+    const { data } = await api.get<User>("/users/me");
 
     return data;
 }
-export const getUserById = async (id: string): Promise<User[]> => {
-    const { data } = await api.get<User[]>(`/users/${id}`);
+export const getUserById = async (id: string): Promise<User> => {
+    const { data } = await api.get<User>(`/users/${id}`);
 
     return data;
 }

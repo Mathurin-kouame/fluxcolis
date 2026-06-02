@@ -11,6 +11,8 @@ export const useMe = () => {
     return useQuery({
         queryKey: ["me"],
         queryFn: getMe,
+        enabled: !!localStorage.getItem("token"),
+         staleTime: 1000 * 60 * 5,
     });
 }
 export const useUserById = (id: string) => {
