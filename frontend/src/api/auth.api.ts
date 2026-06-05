@@ -9,5 +9,5 @@ export const createUser = async (data: RegisterDto ): Promise<User> => {
 export const loginUser = async (data: LoginDto): Promise<LoginResponse> => {
     const { data: response } = await api.post<LoginResponse>("auth/login", data);
 
-    return response
+    return response;
 }
