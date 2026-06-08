@@ -1,8 +1,13 @@
 
 import { z } from "zod";
 export const registerSchema = z.object({
-    name: z.string().trim().min(3, "Le nom complet est requis").refine(
-        (value) => value.split(/\s+/).length >= 2,
+    firstName: z.string().trim().min(2, "Le nom complet est requis").refine(
+        (value) => value.split(/\s+/),
+        "Veuillez saisir votre nom complet (prénom et nom)"
+    ),
+
+    lastName: z.string().trim().min(2, "Le nom complet est requis").refine(
+        (value) => value.split(/\s+/),
         "Veuillez saisir votre nom complet (prénom et nom)"
     ),
     

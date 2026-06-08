@@ -15,7 +15,7 @@ export class AuthService {
 
   //Inscription
   async register(registerDto: RegisterDto) {
-    const { name, email, password } = registerDto;
+    const { firstName, lastName, email, password } = registerDto;
     const existingUser = await this.prisma.user.findUnique({
       where: { email },
     });
@@ -31,14 +31,16 @@ export class AuthService {
     // Création utilisateur
     const newUser = await this.prisma.user.create({
       data: {
-        name,
+        firstName,
+        lastName,
         email,
         password: hashedPassword,
       },
 
       select: {
         id: true,
-        name: true,
+        firstName: true,
+        lastName: true,
         email: true,
         role: true,
         createdAt: true,
@@ -93,7 +95,12 @@ export class AuthService {
       message: 'connexion reussite !',
       access_token: token,
       type: 'Bearer',
-      user: { id: user.id, name: user.name },
+      user: {
+        id: user.id,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        role: user.role,
+      },
     };
   }
 }

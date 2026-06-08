@@ -36,7 +36,7 @@ export const LoginForm = () => {
 
                 {/* left-side */}
                 <div className="relative bg-linear-to-br from-slate-50 to-blue-50 pl-10">
-                    <div className="text-3xl p-4 mb-20 sm:flex items-center">
+                    <div className="text-3xl  sm:flex items-center">
                         <Logo />
                     </div>
                     {/* Illustration */}

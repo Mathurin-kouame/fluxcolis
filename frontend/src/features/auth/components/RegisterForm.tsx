@@ -22,13 +22,14 @@ export const RegisterForm = () => {
     const onSubmit = async (data: RegisterFormData) => {
         try {
             const payload: RegisterDto = {
-                name: data.name,
+                firstName: data.firstName,
+                lastName: data.lastName,
                 email: data.email,
                 password: data.password,
             };
             await mutateAsync(payload);
 
-            navigate("/login")
+            navigate("/connexion")
         } catch (error) {
             console.log("REGISTER ERROR:", error);
         }
@@ -36,10 +37,10 @@ export const RegisterForm = () => {
 
     return (
         <div className="min-h-screen bg-slate-50 flex flex-col justify-center items-center px-3">
-            <div className="w-full max-w-7xl rounded-3xl overflow-hidden shadow-xl grid lg:grid-cols-2">
+            <div className="w-full max-w-7xl rounded-3xl bg-white shadow-[0_0_60px_rgba(15,23,42,0.12)] grid lg:grid-cols-2">
                 {/* left-side */}
                 <div className="relative bg-linear-to-br from-slate-50 to-blue-50 pl-10">
-                    <div className="mb-5">
+                    <div className="mb-5 p-4">
                         <Logo />
                     </div>
 
@@ -94,8 +95,8 @@ export const RegisterForm = () => {
                     </div>
 
                     {/* Illustration */}
-                    {/* <div className="mt-14 flex justify-center">
-                        <img className="max-w-xs" src="/public/img-illustre.png" alt="illutration" />
+                    {/* <div className="absolute bottom-0 left-0 w-full flex justify-center pointer-events-none translate-y-[15%]">
+                        <img className="w-[85%] max-w-150 object-contain" src="/img-illustre.png" alt="illutration" />
                     </div> */}
                 </div>
 
@@ -114,7 +115,7 @@ export const RegisterForm = () => {
                     {/* formulaire */}
                     <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
                         <div className="grid md:grid-cols-2 gap-5">
-                            {/* <div>
+                            <div>
                                 <label className="block mb-2 text-xs font-bold">Prénoms</label>
                                 <div className="relative">
                                     <User size={18}
@@ -122,10 +123,12 @@ export const RegisterForm = () => {
                                     />
                                     <input type="text"
                                         placeholder="Entrez votre prénoms"
+                                        {...register("lastName")}
                                         className="w-full border border-slate-300  rounded-md pl-12 pr-13 py-2 focus:outline-none focus:ring-2 focus:ring-blue-700"
                                     />
                                 </div>
-                            </div> */}
+                                 {errors.lastName && <p className="text-red-500 text-xs mt-1">{errors.lastName.message}</p>}
+                            </div>
                             <div>
                                 <label className="block mb-2 text-xs font-bold">Nom</label>
                                 <div className="relative">
@@ -134,11 +137,11 @@ export const RegisterForm = () => {
                                     />
                                     <input type="text"
                                         placeholder="Entrez votre nom"
-                                        {...register("name")}
+                                        {...register("firstName")}
                                         className="w-full border border-slate-300 rounded-md pl-12 pr-13 py-2 focus:outline-none focus:ring-2 focus:ring-blue-700  "
                                     />
                                 </div>
-                                {errors.name && <p className="text-red-500 text-xs mt-1">{errors.name.message}</p>}
+                                {errors.firstName && <p className="text-red-500 text-xs mt-1">{errors.firstName.message}</p>}
                             </div>
                         </div>
 
@@ -188,7 +191,7 @@ export const RegisterForm = () => {
                                 <input type={showConfirmPassword ? "text" : "password"}
                                     placeholder="Confirmer le mot de passe"
                                     {...register("confirmPassword")}
-                                    className="w-full border border-slate-300 rounded-md pl-12 pr-13 py-2 focus:outline-none focus:ring-2 focus:ring-blue-700  "
+                                    className="w-full border border-slate-300 rounded-md pl-12 pr-13 py-2 focus:outline-none focus:ring-2 focus:ring-blue-700"
                                 />
 
                                 <button type="button" onClick={() => setShowConfirmPassword(!showConfirmPassword)}
@@ -213,7 +216,7 @@ export const RegisterForm = () => {
                 <div>
                 </div>
             </div>
-            <p className="mt-5 mb-2 text-slate-500 flex items-center gap-2">
+            <p className="mt-5  text-slate-500 flex items-center gap-2">
                 <ShieldCheck size={18} className="text-blue-600" />
                 Vos données sont sécurisées et ne seront jamais partagées
             </p>
