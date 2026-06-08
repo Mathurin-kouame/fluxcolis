@@ -34,12 +34,12 @@ export const Navbar = () => {
                     {!isAuthenticated && (
                         <>
                             <button
-                                onClick={() => navigate("/login")}
+                                onClick={() => navigate("/connexion")}
                                 className=" hidden md:flex px-4 py-2.5 rounded-xl border border-b-slate-300 bg-white hover:text-blue-600 transition-all text-sm font-semibold cursor-pointer">
                                 se connecter
                             </button>
                             <button
-                                onClick={() => navigate("/register")}
+                                onClick={() => navigate("/inscription")}
                                 className="px-4 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 transition-all text-white text-sm font-semibold shadow-lg shadow-blue-500/20 cursor-pointer">
                                 commencer
                             </button>

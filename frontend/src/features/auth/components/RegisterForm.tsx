@@ -101,13 +101,13 @@ export const RegisterForm = () => {
 
                 {/* RIGHT SIDE */}
                 <div className="p-8">
-                    <h2 className="text-xl font-semibold">Créez un compte</h2>
+                    <h2 className="text-xl font-semibold">Créez un compte gratuitement</h2>
                     <p className="flex items-center gap-1 text-slate-600 text-sm mt-3 mb-5">
                         <span>Déjà un compte ?</span>
-                        <span onClick={() => navigate("/login")}
+                        <span onClick={() => navigate("/connexion")}
                             className="text-blue-500 hover:text-blue-600 font-semibold cursor-pointer"
                         >
-                            Se connecter
+                            Connectez-vous
                         </span>
                     </p>
                     

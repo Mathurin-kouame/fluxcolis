@@ -27,7 +27,7 @@ export default function Button({
             className={`${baseStyle} ${variants[variant]}`}
         >
             {children}
-            { icon}
+            {icon}
         </button>
     )
 }
