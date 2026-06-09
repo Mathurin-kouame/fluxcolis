@@ -4,7 +4,7 @@ import * as bcrypt from 'bcrypt';
 import { RegisterDto } from './dto/register.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { LoginDto } from './dto/login.dto';
-import { User } from '@prisma/client';
+import { AuthUser } from './types/authUser';
 
 @Injectable()
 export class AuthService {
@@ -72,7 +72,13 @@ export class AuthService {
       throw new UnauthorizedException({
         error: 'mot de password ou adresse incorrect',
       });
-    return this.authentificateUser(existingUser);
+    return this.authentificateUser({
+      id: existingUser.id,
+      firstName: existingUser.firstName,
+      lastName: existingUser.lastName,
+      email: existingUser.email,
+      role: existingUser.role,
+    });
   }
 
   private async isPassWordValid(
@@ -82,7 +88,7 @@ export class AuthService {
     return bcrypt.compare(password, hashedPassword);
   }
 
-  private async authentificateUser(user: User) {
+  private async authentificateUser(user: AuthUser) {
     const payload = {
       sub: user.id,
       email: user.email,
