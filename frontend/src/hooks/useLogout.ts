@@ -5,7 +5,11 @@ export const useLogout = () => {
 
     return () => {
         localStorage.removeItem("token");
+        localStorage.removeItem("refresh-token");
 
-        queryClient.removeQueries({ queryKey: ["me"] });
+        queryClient.removeQueries();
+        queryClient.clear()
+
+        window.location.href= "/"
     }
 }

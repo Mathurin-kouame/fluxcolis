@@ -1,5 +1,6 @@
+import { Button } from "@/components/ui/button"
 import { ArrowRight, SquarePlay } from "lucide-react"
-import Button from "../../../components/ui/Button"
+
 
 export const CtaSection = () => {
     return (
@@ -13,16 +14,17 @@ export const CtaSection = () => {
 
                         <div className="flex flex-wrap gap-4">
                             <Button
-                                variant="primary"
-                                icon={<ArrowRight size={18} />}
+                                variant="default"
+                               
                             >
-                                 Commencer gratuitement
+                                 <ArrowRight className="w-4 h-4 mr-2" />
+                                Commencer gratuitement
                             </Button>
                             <Button
                                 variant="secondary"
-                                icon={<SquarePlay size={18} />}
                             >
-                                 Demander démo
+                                 <SquarePlay className="w-4 h-4 mr-2" />
+                                Demander démo
                             </Button>
                         </div>
                     </div>

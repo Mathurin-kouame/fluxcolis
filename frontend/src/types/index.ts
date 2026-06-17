@@ -71,6 +71,7 @@ export interface DashboardStats {
   inTransit: number;
   delivered: number;
   cancelled: number;
+  recentParcels?: Parcel[]; 
 }
 
 export interface PublicTrackingResponse {

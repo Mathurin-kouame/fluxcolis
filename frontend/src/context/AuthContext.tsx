@@ -11,16 +11,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
  
     const { data: user, isLoading } = useMe();
 
-    // login
-    const loginMutation = useLogin()
-    const logout = useLogout()
+    const loginMutation = useLogin();
+    const logout = useLogout();
 
     const value = useMemo(() => ({
         user: user ?? null,
         isAuthenticated: !!user,
         isLoading,
         login: loginMutation.mutateAsync,
-        logout,
+        logout
+       
     }),
         [user,  isLoading, loginMutation, logout ]
     );

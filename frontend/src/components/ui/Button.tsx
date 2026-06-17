@@ -1,33 +1,32 @@
-import type { ReactNode } from "react";
+import * as React from "react"
+import { Slot } from "radix-ui"
 
-interface ButtonProps {
-    children: ReactNode;
-    variant?: "primary" | "secondary";
-    icon?: ReactNode;
-    onClick?: () => void;
-    type?: "button" | "submit" | "reset"
+import { cn } from "@/lib/utils"
+import type { VariantProps } from "class-variance-authority"
+import { buttonVariants } from "@/lib/constants/button-variants"
+
+
+ function Button({
+  className,
+  variant = "default",
+  size = "default",
+  asChild = false,
+  ...props
+}: React.ComponentProps<"button"> &
+  VariantProps<typeof buttonVariants> & {
+    asChild?: boolean
+  }) {
+  const Comp = asChild ? Slot.Root : "button"
+
+  return (
+    <Comp
+      data-slot="button"
+      data-variant={variant}
+      data-size={size}
+      className={cn(buttonVariants({ variant, size, className }))}
+      {...props}
+    />
+  )
 }
 
-export default function Button({
-    children,
-    variant = "primary",
-    icon,
-    onClick,
-    type = "button",
-}: ButtonProps) {
-    const baseStyle = "px-4 py-3 rounded-xl transition-all font-semibold flex items-center gap-2 cursor-pointer";
-    const variants = {
-        primary: "text-white bg-blue-600 hover:bg-blue-700 border hover:border-blue-50 shadow-xl shadow-blue-500/30",
-        secondary: "px-4 py-3 rounded-xl border border-slate-300 bg-white hover:bg-slate-100 transition-all font-semibold flex items-center gap-2 cursor-pointer"
-    }
-    return (
-        <button
-            type={type}
-            onClick={onClick}
-            className={`${baseStyle} ${variants[variant]}`}
-        >
-            {children}
-            {icon}
-        </button>
-    )
-}
+export { Button }
