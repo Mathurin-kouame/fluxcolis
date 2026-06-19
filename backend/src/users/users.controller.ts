@@ -19,8 +19,7 @@ export class UsersController {
   @UseGuards(JwtAuthGuard)
   @Get('me')
   getMe(@Request() req: RequestWithUser) {
-    const user = req.user;
-    return user;
+    return this.usersService.findOne(req.user.userId);
   }
 
   @UseGuards(JwtAuthGuard)
