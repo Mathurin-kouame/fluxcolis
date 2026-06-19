@@ -2,6 +2,7 @@ import { useLogout } from "@/hooks/useLogout";
 import { LogOut, User } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
+
 interface TopbarProps {
     user: {
         firstName: string;

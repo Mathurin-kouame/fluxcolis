@@ -1,4 +1,5 @@
 
+import { useNavigate } from "react-router-dom";
 import { StatCard } from "../../../components/ui/StatCard"
 import { useDashboard } from "../../../hooks/useDashboard";
 import { DateRangePicker } from "../components/DateRangePicker";
@@ -6,6 +7,8 @@ import { DateRangePicker } from "../components/DateRangePicker";
 
 
 export const OverviewPage = () => {
+
+     const navigate = useNavigate();
 
     const { data, isLoading, error} = useDashboard();
     
@@ -76,7 +79,7 @@ export const OverviewPage = () => {
             <div className="rounded-2xl border border-slate-200 bg-white shadow-sm">
                 <div className="flex items-center justify-between border-b border-slate-100 px-6 py-4">
                     <h2 className="text-xs font-semibold text-slate-700">Derniers colis</h2>
-                    <button className="text-sm font-medium text-blue-500 hover:text-blue-700 transition cursor-pointer float-right">Voir tous les colis →</button> 
+                    <button onClick={() => navigate("/dashboard/colis")} className="text-sm font-medium text-blue-500 hover:text-blue-700 transition cursor-pointer float-right">Voir tous les colis →</button> 
                 </div>
                 <table className="w-full text-sm">
                     <thead>
