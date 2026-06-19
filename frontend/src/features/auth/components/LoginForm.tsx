@@ -9,6 +9,7 @@ import { useNavigate } from "react-router-dom";
 
 export const LoginForm = () => {
     const [showPassword, setShowPassword] = useState(false);
+    const [loginError, setLoginError] = useState("")
 
     const navigate = useNavigate();
 
@@ -19,29 +20,35 @@ export const LoginForm = () => {
 
     const onSubmit = async (data: LoginFormData) => {
         try {
+            setLoginError("")
+            
             const payload: LoginDto = {
                 email: data.email,
                 password: data.password,
-            }
+            };
+
             await mutateAsync(payload);
             navigate("/dashboard")
         } catch (error) {
-            console.log("ERROR_LOGIN:", error)
+            console.log("ERROR_LOGIN:", error);
+            setLoginError("Email ou mot de passe incorrect");
+
         }
     }
 
     return (
         <div className="min-h-screen bg-slate-50 flex flex-col justify-center items-center px-3">
+
             <div className="w-full max-w-7xl rounded-3xl bg-white shadow-[0_0_50px_rgba(15,23,42,0.12)] grid lg:grid-cols-2">
 
                 {/* left-side */}
                 <div className="relative bg-linear-to-br from-slate-50 to-blue-50 pl-10">
-                    <div className="text-3xl  sm:flex items-center">
+                    <div className="text-3xl  sm:flex items-center p-6">
                         <Logo />
                     </div>
                     {/* Illustration */}
                     <div className="flex justify-center">
-                        <img className="" src="/public/img-illustre.png" alt="illutration" />
+                        <img className="" src="/img-illustre.png" alt="illutration" />
                     </div>
                 </div>
                 {/* right-side */}
@@ -50,6 +57,13 @@ export const LoginForm = () => {
                         <h1 className="text-3xl font-bold mb-4">Connexion</h1>
                         <p className="mb-6">Connectez vous à votre compte pour contribuer à gérer vos colis</p>
                     </div>
+
+                    {loginError && (
+                        <div className="rounded-lg bg-red-50 border border-red-200 p-3 text-sm text-red-700">
+                            {loginError}
+                        </div>
+                    )}
+
                     <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
                         <div>
                             {/* email */}
@@ -90,8 +104,8 @@ export const LoginForm = () => {
                                 </div>
                                 {errors.password && <p className="text-red-500 text-xs mt-1">{errors.password.message}</p>}
                             </div>
-                           
-                             <button
+
+                            <button
                                 type="submit"
                                 disabled={isSubmitting || isPending}
                                 className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-xl disabled:opacity-50 disabled:cursor-not-allowed mt-6"
@@ -99,15 +113,15 @@ export const LoginForm = () => {
                                 {isPending ? "connexion..." : "Se connecter"}
                             </button>
                             <div className="mt-8">
-                            <p className="flex items-center gap-1 text-slate-600 text-sm mt-3 mb-5">
-                           <span>Pas encore de compte ?</span>
-                          <span onClick={() => navigate("/inscription")}
-                            className="text-blue-500 hover:text-blue-600 font-semibold cursor-pointer"
-                        >
-                            Créez un compte
-                        </span>
-                    </p>
-                            </div> 
+                                <p className="flex items-center gap-1 text-slate-600 text-sm mt-3 mb-5">
+                                    <span>Pas encore de compte ?</span>
+                                    <span onClick={() => navigate("/inscription")}
+                                        className="text-blue-500 hover:text-blue-600 font-semibold cursor-pointer"
+                                    >
+                                        Créez un compte
+                                    </span>
+                                </p>
+                            </div>
                         </div>
                     </form>
                 </div>

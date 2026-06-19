@@ -1,21 +1,17 @@
-import { BarChart3, CircleUserRound, LayoutDashboard, Menu, MessageSquare, Package, Send, Settings, Users } from "lucide-react"
+import { BarChart3, LayoutDashboard, Menu, MessageSquare, Package, Send, Settings, Users } from "lucide-react"
 import Logo from "../../../components/ui/Logo"
 import { NavLink } from "react-router-dom";
+import type { User } from "@/types";
 
 
 
 interface SidebarProps {
-    userRole: "ADMIN" | "EMPLOYEE";
+     user: User;
     isOpen: boolean;
     setIsOpen: (open: boolean) => void;
-    user: {
-        firstName: string;
-        lastName: string;
-        email: string;
-    }
 }
 
-export const Sidebar = ({userRole, isOpen, setIsOpen, user}: SidebarProps) => {
+export const Sidebar = ({ isOpen, setIsOpen}: SidebarProps) => {
 
     const menuItems = [
         {label: "Tableau de bord", path: "/dashboard", icon: LayoutDashboard},
@@ -59,22 +55,6 @@ export const Sidebar = ({userRole, isOpen, setIsOpen, user}: SidebarProps) => {
                     )
                 })}
             </nav>
-
-            {/* Profil de user connecté en bas (ADMIN) */}
-            <div className="p-4 border-t border-slate-50 flex items-center gap-3 mt-50">
-                <div className="">
-                    <CircleUserRound />
-                     {/* {user.firstName[0]}{user.lastName[0]} */}
-                </div>
-                <div className={`min-w-0 transition-all duration-200 ${!isOpen && "opacity-0 w-0 overflow-hidden"}`}>
-                    <p className="text-xs font-bold text-slate-900 truncate">
-                        {/* {user.firstName} {user.lastName} */}
-                    </p>
-                    <p className="text-[10px] text-slate-400 truncate">
-                     {/* {user.email} */}
-                    </p>
-                </div>
-            </div>
         </aside>
     )
 }

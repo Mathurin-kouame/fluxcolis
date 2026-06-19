@@ -11,6 +11,7 @@ export interface User {
   role: Role;
   createdAt: string;
 }
+
 export interface Parcel {
   id: string;
   trackingNumber: string;

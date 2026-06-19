@@ -9,8 +9,8 @@ import { AuthContext } from "./auth-context";
 
 export function AuthProvider({ children }: { children: ReactNode }) {
  
-    const { data: user, isLoading } = useMe();
-
+    const { data: user, isLoading, refetch } = useMe();
+    console.log("USER AUTH PROVIDER:", user);
     const loginMutation = useLogin();
     const logout = useLogout();
 
@@ -19,10 +19,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         isAuthenticated: !!user,
         isLoading,
         login: loginMutation.mutateAsync,
-        logout
+        logout,
+        refetchUser: refetch,
        
     }),
-        [user,  isLoading, loginMutation, logout ]
+        [user,  isLoading, loginMutation, logout, refetch ]
     );
     
     return (

@@ -7,7 +7,23 @@ import { DateRangePicker } from "../components/DateRangePicker";
 
 export const OverviewPage = () => {
 
-    const { data, isLoading } = useDashboard();
+    const { data, isLoading, error} = useDashboard();
+    
+    if (isLoading) {
+        return (
+            <div className="min-h-75 flex items-center justify-center">
+                <div className="h-10 w-10 rounded-full border-4 border-slate-200 border-t-blue-600 animate-spin" />
+            </div>
+        );
+    }
+
+    if (error) {
+        return (
+            <div className="p-8 text-red-500">
+                Erreur de changement ....
+            </div>
+        );
+    }
     return (
         <div className="space-y-8 p-8">
 
@@ -76,10 +92,20 @@ export const OverviewPage = () => {
                         {data?.recentParcels?.length ? (
                             data.recentParcels?.map((parcel) => (
                                 <tr key={parcel.id}>
-                                    ....
+                                    <td className="px-6 py-4">{parcel.trackingNumber}</td>
+                                    <td className="px-6 py-4">
+                                        {parcel.recipientName}
+                                    </td>
+                                    <td className="px-6 py-4">{parcel.status}</td>
+                                    <td className="px-6 py-4">
+                                        {parcel.destination}
+                                    </td>
+                                    <td>
+                                        {new Date(parcel.createdAt).toLocaleDateString()}
+                                    </td>
                                 </tr>
                             ))
-
+                            
                         ) : (
                                 <tr>
                                     <td
