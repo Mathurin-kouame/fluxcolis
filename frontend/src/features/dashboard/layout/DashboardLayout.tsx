@@ -36,8 +36,7 @@ export const DashboardLayout = () => {
                 <Topbar
                    user={user}
                 />
-                
-
+            
                 {/* Contenu de la page active */}
                 <main>
                     <div>
