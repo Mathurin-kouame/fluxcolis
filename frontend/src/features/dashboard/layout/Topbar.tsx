@@ -14,7 +14,7 @@ interface TopbarProps {
 
 export const Topbar = ({ user }: TopbarProps) => {
     
-    const initials = user.email?.[0]?.toUpperCase() || "?";
+    const initials = user.lastName?.[0]?.toUpperCase() || "?";
     const logout = useLogout();
 
     const [openProfile, setOpenProfile] = useState(false);
@@ -54,9 +54,9 @@ export const Topbar = ({ user }: TopbarProps) => {
                         </div>
 
                         <div className="text-left leading-tight">
-                            <p className="text-xs font-bold text-slate-900 truncate">
+                            {/* <p className="text-xs font-bold text-slate-900 truncate">
                                 {user.firstName}
-                            </p>
+                            </p> */}
                             <p className="text-[10px] text-slate-400 truncate">
                                 {user.role}
                             </p>
@@ -72,7 +72,7 @@ export const Topbar = ({ user }: TopbarProps) => {
                                     {initials}
                                 </div>
                                 <p className="text-sm font-semibold text-slate-900">
-                                    {user.firstName} {user.lastName}
+                                   {user.lastName} {user.firstName} 
                                 </p>
                                 <p className="text-xs text-slate-500 truncate">
                                     {user.email}

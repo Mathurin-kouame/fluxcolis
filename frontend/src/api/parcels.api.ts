@@ -22,7 +22,7 @@ export const searchParcelByTracking = async (trackingNumber: string): Promise<Pa
 
 export const getLatestParcels = async ():Promise<LatestParcelRow[]> => {
     const { data: parcels } = await api.get<LatestParcelRow[]>("/parcels/dashboard/latest");
-
+    console.log("DENIER_COLIS:", parcels)
     return parcels;
 }
 

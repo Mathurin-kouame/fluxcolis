@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { StatCard } from "../../../components/ui/StatCard"
 import { useDashboard } from "../../../hooks/useDashboard";
 import { DateRangePicker } from "../components/DateRangePicker";
+import { useLatestParcels } from "@/hooks/useLatestParcels";
+import { Eye, Pencil, Trash2 } from "lucide-react";
 
 
 
@@ -10,7 +12,8 @@ export const OverviewPage = () => {
 
      const navigate = useNavigate();
 
-    const { data, isLoading, error} = useDashboard();
+    const { data: stats, isLoading, error } = useDashboard();
+    const { data: lastParcels } = useLatestParcels();
     
     if (isLoading) {
         return (
@@ -37,34 +40,34 @@ export const OverviewPage = () => {
             <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-5">
                 <StatCard
                     title="Total Colis"
-                    value={data?.total ?? 0}
+                    value={stats?.total ?? 0}
                     percentage="0%"
                     type="total"
                 />
 
                 <StatCard
-                    title="En transit"
-                    value={data?.inTransit ?? 0}
+                    title="En attente"
+                    value={stats?.pending ?? 0}
                     percentage="0"
+                    type="pending"
+                />
+
+                <StatCard
+                    title="En transit"
+                    value={stats?.inTransit ?? 0}
+                    percentage="0%"
                     type="inTransit"
                 />
 
                 <StatCard
-                    title="Livrés"
-                    value={data?.delivered ?? 0}
+                    title="Livré"
+                    value={stats?.delivered ?? 0}
                     percentage="0%"
                     type="delivered"
                 />
-
-                <StatCard
-                    title="En attente"
-                    value={data?.pending ?? 0}
-                    percentage="0%"
-                    type="pending"
-                />
                 <StatCard
                     title="Annuler"
-                    value={data?.cancelled ?? 0}
+                    value={stats?.cancelled ?? 0}
                     percentage="0%"
                     type="cancelled"
                 />
@@ -81,30 +84,58 @@ export const OverviewPage = () => {
                     <h2 className="text-xs font-semibold text-slate-700">Derniers colis</h2>
                     <button onClick={() => navigate("/dashboard/colis")} className="text-sm font-medium text-blue-500 hover:text-blue-700 transition cursor-pointer float-right">Voir tous les colis →</button> 
                 </div>
-                <table className="w-full text-sm">
+                <div className="overflow-x-auto">
+                <table className="w-full text-sm ">
                     <thead>
-                        <tr>
-                            <th className="px-6 py-3">N° Colis</th>
-                            <th className="px-6 py-3">Destinataire</th>
-                            <th className="px-6 py-3">Statut</th>
-                            <th className="px-6 py-3">Localisation</th>
-                            <th className="px-6 py-3">Date</th>
+                        <tr className="border-b border-gray-100">
+                            <th className="px-4 py-4 text-left text-sm font-semibold text-gray-500">N° Colis</th>
+                            <th className="px-4 py-4 text-left text-sm font-semibold text-gray-500">Destinataire</th>
+                            <th className="px-4 py-4 text-left text-sm font-semibold text-gray-500">Statut</th>
+                            <th className="px-4 py-4 text-left text-sm font-semibold text-gray-500">Localisation</th>
+                            <th className="px-4 py-4 text-left text-sm font-semibold text-gray-500">Date</th>
+                            <th className="px-4 py-4 text-sm font-semibold text-gray-500 text-center">Actions</th>
                         </tr> 
-                    </thead>
-                    <tbody className=" divide-y divide-slate-100">
-                        {data?.recentParcels?.length ? (
-                            data.recentParcels?.map((parcel) => (
-                                <tr key={parcel.id}>
-                                    <td className="px-6 py-4">{parcel.trackingNumber}</td>
-                                    <td className="px-6 py-4">
+                        </thead>
+                        
+                    <tbody className="divide-y divide-slate-100">
+                        {lastParcels?.length ? (
+                           lastParcels?.map((parcel) => (
+                                <tr key={parcel.id} className="hover:bg-gray-50 transition-colors">
+                                    <td className="px-4 py-4">{parcel.trackingNumber}</td>
+                                   <td className="px-4 py-4">
                                         {parcel.recipientName}
                                     </td>
-                                    <td className="px-6 py-4">{parcel.status}</td>
-                                    <td className="px-6 py-4">
+                                   <td className="px-4 py-4 whitespace-nowrap">
+                                       <span className={`px-3 py-1 inline-flex text-xs font-semibold rounded-full border ${
+                                           parcel.status === 'PENDING'
+                                           ? 'bg-amber-500/15 text-amber-500 border-amber-500/20'
+                                           : parcel.status === 'IN_TRANSIT'
+                                               ? 'bg-purple-500/15 text-purple-500 border-purple-500/20'
+                                               : parcel.status === 'DELIVERED'
+                                                   ? 'bg-green-500/15 text-green-500 border-green-500/20'
+                                                : 'bg-red-500/15 text-red-500 border-red-500/20'
+                                           }`}>
+                                           {parcel.status === 'PENDING' && 'En attente'} 
+                                           {parcel.status === 'IN_TRANSIT' && 'En transit'} 
+                                           {parcel.status === 'DELIVERED' && 'Livré'} 
+                                           {parcel.status === 'CANCELLED' && 'Annulé'} 
+                                       </span>
+
+                                   </td>
+                                    <td className="px-4 py-4 text-sm text-slate-600">
                                         {parcel.destination}
                                     </td>
                                     <td>
                                         {new Date(parcel.createdAt).toLocaleDateString()}
+                                   </td>
+                                   
+                                   {/* colonne Actions (voir , modifier, supprimer) */}
+                                   <td className="px-4 py-4 whitespace-nowrap">
+                                       <div className="text-center text-slate-400 gap-4">
+                                          <button className="p-1 text-slate-600 transition-colors cursor-pointer"> <Eye size={16}/></button> 
+                                          <button className="p-1 text-slate-600 transition-colors cursor-pointer"> <Pencil size={16}/></button> 
+                                          <button className="p-1 text-red-600 transition-colors cursor-pointer"> <Trash2 size={16}/></button> 
+                                       </div>
                                     </td>
                                 </tr>
                             ))
@@ -120,7 +151,8 @@ export const OverviewPage = () => {
                                 </tr>
                        )}
                     </tbody>        
-                </table>
+                    </table>
+                     </div>
             </div>
         </div>
     );
