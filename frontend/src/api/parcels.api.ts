@@ -10,7 +10,7 @@ export const createParcel = async (data: CreateParcelInput): Promise<Parcel> => 
 
 export const getAllParcels = async (): Promise<Parcel[]> => {
     const {data: parcels} = await api.get<Parcel[]>("/parcels");
-
+    console.log("MES COLIS:", parcels);
     return parcels;
 };
 
