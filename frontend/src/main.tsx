@@ -5,7 +5,7 @@ import { BrowserRouter } from 'react-router-dom'
 import React from 'react'
 import ReactDOM from "react-dom/client";
 import { AuthProvider } from './context/AuthContext.tsx'
-
+import "./App.css";
 
 const queryClient = new QueryClient({
   defaultOptions: {

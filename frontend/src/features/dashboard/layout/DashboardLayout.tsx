@@ -23,22 +23,22 @@ export const DashboardLayout = () => {
         return <Navigate to="/connexion" replace />;
     }
     return (
-        <div className="min-h-screen bg-slate-100 flex">
-
+        <div className="h-screen bg-slate-100 flex overflow-hidden">
             {/* Barre latérale à gauche */}
-            <Sidebar user={user}
+            <Sidebar
+                user={user}
                   isOpen={isSidebarOpen}
                   setIsOpen={setIsSidebarOpen}/>
 
             {/* Zone droite globale */}
-            <div className="flex-1 flex flex-col min-w-0">
+            <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
                 {/* Barre du haut */}
                 <Topbar
                    user={user}
                 />
             
                 {/* Contenu de la page active */}
-                <main>
+                <main className="flex-1 overflow-y-hidden">
                     <div>
                          < Outlet />
                     </div>

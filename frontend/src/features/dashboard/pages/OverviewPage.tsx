@@ -48,7 +48,7 @@ export const OverviewPage = () => {
                 <StatCard
                     title="En attente"
                     value={stats?.pending ?? 0}
-                    percentage="0"
+                    percentage="0%"
                     type="pending"
                 />
 
@@ -80,32 +80,34 @@ export const OverviewPage = () => {
 
             {/* Tableau */}
             <div className="rounded-2xl border border-slate-200 bg-white shadow-sm">
-                <div className="flex items-center justify-between border-b border-slate-100 px-6 py-4">
+                <div className="flex items-center justify-between border-b border-slate-100 px-4 py-4">
                     <h2 className="text-xs font-semibold text-slate-700">Derniers colis</h2>
                     <button onClick={() => navigate("/dashboard/colis")} className="text-sm font-medium text-blue-500 hover:text-blue-700 transition cursor-pointer float-right">Voir tous les colis →</button> 
                 </div>
                 <div className="overflow-x-auto">
-                <table className="w-full text-sm ">
+                <table className="w-full text-sm">
                     <thead>
                         <tr className="border-b border-gray-100">
-                            <th className="px-4 py-4 text-left text-sm font-semibold text-gray-500">N° Colis</th>
-                            <th className="px-4 py-4 text-left text-sm font-semibold text-gray-500">Destinataire</th>
-                            <th className="px-4 py-4 text-left text-sm font-semibold text-gray-500">Statut</th>
-                            <th className="px-4 py-4 text-left text-sm font-semibold text-gray-500">Localisation</th>
-                            <th className="px-4 py-4 text-left text-sm font-semibold text-gray-500">Date</th>
-                            <th className="px-4 py-4 text-sm font-semibold text-gray-500 text-center">Actions</th>
+                            <th className="px-3 py-3 text-left text-sm font-semibold text-gray-500">N° Colis</th>
+                            <th className="px-3 py-3 text-left text-sm font-semibold text-gray-500">Destinataire</th>
+                            <th className="px-3 py-3 text-left text-sm font-semibold text-gray-500">Statut</th>
+                            <th className="px-3 py-3 text-left text-sm font-semibold text-gray-500">Localisation</th>
+                            <th className="px-3 py-3 text-left text-sm font-semibold text-gray-500">Date</th>
+                            <th className="px-3 py-3 text-sm font-semibold text-gray-500 text-center">Actions</th>
                         </tr> 
-                        </thead>
+                    </thead>
                         
                     <tbody className="divide-y divide-slate-100">
                         {lastParcels?.length ? (
                            lastParcels?.map((parcel) => (
                                 <tr key={parcel.id} className="hover:bg-gray-50 transition-colors">
-                                    <td className="px-4 py-4">{parcel.trackingNumber}</td>
-                                   <td className="px-4 py-4">
+                                   <td className="px-3 py-3">
+                                       {parcel.trackingNumber}
+                                   </td>
+                                   <td className="px-3 py-3">
                                         {parcel.recipientName}
                                     </td>
-                                   <td className="px-4 py-4 whitespace-nowrap">
+                                   <td className="px-3 py-3 whitespace-nowrap">
                                        <span className={`px-3 py-1 inline-flex text-xs font-semibold rounded-full border ${
                                            parcel.status === 'PENDING'
                                            ? 'bg-amber-500/15 text-amber-500 border-amber-500/20'
@@ -122,7 +124,7 @@ export const OverviewPage = () => {
                                        </span>
 
                                    </td>
-                                    <td className="px-4 py-4 text-sm text-slate-600">
+                                    <td className="px-3 py-3 text-sm text-slate-600">
                                         {parcel.destination}
                                     </td>
                                     <td>
@@ -152,7 +154,7 @@ export const OverviewPage = () => {
                        )}
                     </tbody>        
                     </table>
-                     </div>
+                 </div>
             </div>
         </div>
     );

@@ -4,7 +4,7 @@ import { useQuery } from "@tanstack/react-query"
 
 export const useParcels = () => {
     return useQuery<Parcel[]>({
-        queryKey: ["Parcels"],
+        queryKey: ["parcels"],
         queryFn: getAllParcels,
     })
 }

@@ -1,4 +1,4 @@
-import { BarChart3, LayoutDashboard, Menu, MessageSquare, Package, Send, Settings, Users } from "lucide-react"
+import { BarChart3, LayoutDashboard, MessageSquare, Package, PanelLeft, Send, Settings, Users } from "lucide-react"
 import Logo from "../../../components/ui/Logo"
 import { NavLink } from "react-router-dom";
 import type { User } from "@/types";
@@ -32,7 +32,7 @@ export const Sidebar = ({ isOpen, setIsOpen}: SidebarProps) => {
                    </span>
                 </div>
                 <button onClick={()=> setIsOpen(!isOpen)} className="p-2 rounded-xl hover:bg-slate-50 text-slate-400 cursor-pointer">
-                    <Menu size={18}/>
+                    <PanelLeft size={18}/>
                 </button>
             </div>
             
