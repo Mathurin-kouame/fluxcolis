@@ -19,7 +19,7 @@ export const Navbar = () => {
                     <h1 className="font-bold"><span className="text-xl font-bold text-blue-700">Flux</span>Colis</h1>
                 </div>
 
-                <ul className=" hidden lg:flex items-center gap-8">
+                <ul className="hidden lg:flex items-center gap-8">
                     {NAV_LINK.map((link) => (
                         <li key={link.label}>
                             <a

@@ -7,8 +7,5 @@ export const PrivateRoute = () => {
 
      return isAuthenticated ? <Outlet />
         : <Navigate to="/" replace />;
-    
-    //Temporaire
-     return <Outlet />
-    
+     
 }

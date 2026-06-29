@@ -5,14 +5,14 @@ interface CreateParcelModalProps {
     isOpen: boolean;
     setIsOpen: (value: boolean) => void;
     onSuccess?: () => void;
-    
+
 }
 
 export const CreateParcelModal = ({ isOpen, setIsOpen, onSuccess }: CreateParcelModalProps) => {
     if (!isOpen) return null;
 
     return (
-        <div className="fixed inset-0 z-50 ">
+        <div className="fixed inset-0 z-50">
             <div
                 className="absolute inset-0 transition-opacity rounded-2xl flex items-center justify-center"
                 onClick={() => setIsOpen(false)}
@@ -32,7 +32,7 @@ export const CreateParcelModal = ({ isOpen, setIsOpen, onSuccess }: CreateParcel
 
                         <button
                             onClick={() => setIsOpen(false)}
-                            className="p-2 rounded-full hover:bg-blue-300 hover:text-white text-blue-500 transition cursor-pointer"
+                            className="p-2 rounded-full hover:bg-blue-500 hover:text-white text-blue-500 transition cursor-pointer"
                         >
                             <X size={18} />
                         </button>
@@ -42,8 +42,8 @@ export const CreateParcelModal = ({ isOpen, setIsOpen, onSuccess }: CreateParcel
                     <div className="p-6">
                         <CreateParcelForm
                             onSuccess={() => {
-                            setIsOpen(false);
-                             onSuccess?.();
+                                setIsOpen(false);
+                                onSuccess?.();
                             }}
                         />
                     </div>

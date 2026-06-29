@@ -1,3 +1,4 @@
+import { ActionButton } from "@/components/ui/ActionButton";
 import { CreateParcelModal } from "@/features/parcels/modal/CreateParcelModal";
 import { useParcels } from "@/hooks/useParcels";
 import { ChevronLeft, ChevronRight, Eye, Loader2, Pencil, Search, SlidersHorizontal, Trash2 } from "lucide-react"
@@ -8,7 +9,7 @@ export const ParcelPage = () => {
   const [activeTab, setActiveTab] = useState("ALL");
   const [isOpen, setIsOpen] = useState(false);
 
-   const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
   const { data: parcels = [], isLoading, isError, error } = useParcels();
 
@@ -42,10 +43,10 @@ export const ParcelPage = () => {
         {/* notification */}
         <div className="mt-3 flex items-center justify-center">
           {successMessage && (
-          <div className="bg-green-50 border border-green-200 text-green-700 px-4 py-2 rounded-lg text-sm">
-          {successMessage}
-         </div>
-        )}
+            <div className="bg-green-50 border border-green-200 text-green-700 px-4 py-2 rounded-lg text-sm">
+              {successMessage}
+            </div>
+          )}
         </div>
 
         {/* actions rapide a droite */}
@@ -64,7 +65,7 @@ export const ParcelPage = () => {
             Filtes
           </button>
           <button
-             onClick={() => setIsOpen(true)}
+            onClick={() => setIsOpen(true)}
             className="flex items-center bg-blue-600 text-white rounded-sm text-sm font-semibold hover:bg-blue-700 shadow-sm transition-colors px-4 py-2 gap-2 cursor-pointer">
             Nouveau colis
           </button>
@@ -77,7 +78,7 @@ export const ParcelPage = () => {
         setIsOpen={setIsOpen}
         onSuccess={() => {
           setSuccessMessage("Colis crée avec succès !");
-          setTimeout(() =>setSuccessMessage(null), 3000)
+          setTimeout(() => setSuccessMessage(null), 3000)
         }}
       />
 
@@ -86,8 +87,7 @@ export const ParcelPage = () => {
           <button
             key={parcelTab.id}
             onClick={() => setActiveTab(parcelTab.id)}
-            className={`pb-3 text-sm font-medium whitespace-nowrap border-b-2 transition-all cursor-pointer ${
-              activeTab === parcelTab.id
+            className={`pb-3 text-sm font-medium whitespace-nowrap border-b-2 transition-all cursor-pointer ${activeTab === parcelTab.id
                 ? "border-blue-600 text-blue-600 font-semibold"
                 : "border-transparent text-slate-500 hover:text-slate-700"
               }`}
@@ -107,12 +107,12 @@ export const ParcelPage = () => {
         <div className="text-center text-red-500 bg-red-50 border border-red-100 rounded-xl text-sm font-medium py-10 p-4">
           Erreur survenue :{error.message}
         </div>
-        ) : (
-       <div className="max-h-150 overflow-y-auto">
+      ) : (
+        <div className="max-h-150 overflow-y-auto">
           <table className="w-full">
             <thead className="sticky top-0 z-20 bg-white">
               <tr className="border-b border-slate-100 text-left">
-                <th className="px-4 py-3 text-sm font-semibold text-blue-600">N° de suivi</th>
+                <th className="px-4 py-3 text-sm font-semibold text-blue-600">N° de suivis</th>
                 <th className="px-4 py-3 text-sm font-semibold text-slate-500">Destinataire</th>
                 <th className="px-4 py-3 text-sm font-semibold text-slate-500">Destination</th>
                 <th className="px-4 py-3 text-sm font-semibold text-slate-500">Statut</th>
@@ -130,12 +130,12 @@ export const ParcelPage = () => {
 
                     <td className="px-4 py-4 whitespace-nowrap">
                       <span className={`px-3 py-1 inline-flex text-xs font-semibold rounded-full border ${parcel.status === 'PENDING'
-                          ? 'bg-amber-500/15 text-amber-500 border-amber-500/20'
-                          : parcel.status === 'IN_TRANSIT'
-                            ? 'bg-purple-500/15 text-purple-500 border-purple-500/20'
-                            : parcel.status === 'DELIVERED'
-                              ? 'bg-green-500/15 text-green-500 border-green-500/20'
-                              : 'bg-red-500/15 text-red-500 border-red-500/20'
+                        ? 'bg-amber-500/15 text-amber-500 border-amber-500/20'
+                        : parcel.status === 'IN_TRANSIT'
+                          ? 'bg-purple-500/15 text-purple-500 border-purple-500/20'
+                          : parcel.status === 'DELIVERED'
+                            ? 'bg-green-500/15 text-green-500 border-green-500/20'
+                            : 'bg-red-500/15 text-red-500 border-red-500/20'
                         }`}>
                         {parcel.status === 'PENDING' && 'En attente'}
                         {parcel.status === 'IN_TRANSIT' && 'En transit'}
@@ -148,11 +148,25 @@ export const ParcelPage = () => {
                       {parcel.createdAt ? new Date(parcel.createdAt).toLocaleDateString('fr-FR') : "-"}
                     </td>
 
-                    <td className="px-4 py-4 text-center whitespace-nowrap">
-                      <div className="flex items-center justify-center gap-2 text-slate-400">
-                        <button className="p-1 hover:text-slate-600 transition-colors"><Eye size={16} /></button>
-                        <button className="p-1 hover:text-blue-600 transition-colors"><Pencil size={16} /></button>
-                        <button className="p-1 hover:text-red-600 transition-colors"><Trash2 size={16} /></button>
+                    <td className="text-center whitespace-nowrap">
+                      <div className="flex items-center justify-center gap-1.5 text-slate-400">
+                        <ActionButton
+                          tooltip="Voir détails"
+                          icon={<Eye size={16} />}
+                          className="hover:text-slate-600"
+                        />
+
+                        <ActionButton
+                          tooltip="Modifier"
+                          icon={<Pencil size={16} />}
+                          className="hover:text-slate-600"
+                        />
+
+                        <ActionButton
+                          tooltip="Supprimer"
+                          icon={<Trash2 size={16} />}
+                          className="hover:text-slate-600"
+                        />
                       </div>
                     </td>
                   </tr>
