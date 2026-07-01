@@ -12,6 +12,7 @@ import { ConsigneesPage } from './features/dashboard/pages/ConsigneesPage'
 import { ClaimsPage } from './features/dashboard/pages/ClaimsPage'
 import { SettingPage } from './features/dashboard/pages/SettingPage'
 import { RapportsPage } from './features/dashboard/pages/RapportsPage'
+import { ParcelDetailsPage } from './features/parcels/components/ParcelDetailsPage'
 
 function App() {
   return (
@@ -32,6 +33,7 @@ function App() {
              <Route path="settings" element={<SettingPage />} /> 
           </Route>
         </Route>
+       <Route path="/parcels/:id" element={<ParcelDetailsPage />} />
       </Route>
       
     </Routes>

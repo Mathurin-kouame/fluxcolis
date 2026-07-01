@@ -64,7 +64,7 @@ export const getPublicTracking = async (trackingNumber: string):Promise<PublicTr
 
 export const getParcelTrackingHistory = async (id: string): Promise<TrackingHistory[]> => {
     const { data: history } = await api.get<TrackingHistory[]>(`/parcels/${id}/tracking`);
-
+    
     return history;
 }
 

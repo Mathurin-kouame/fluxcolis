@@ -3,6 +3,7 @@ import { CreateParcelModal } from "@/features/parcels/modal/CreateParcelModal";
 import { useParcels } from "@/hooks/useParcels";
 import { ChevronLeft, ChevronRight, Eye, Loader2, Pencil, Search, SlidersHorizontal, Trash2 } from "lucide-react"
 import { useState } from "react"
+import { useNavigate } from "react-router-dom";
 
 export const ParcelPage = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -30,6 +31,8 @@ export const ParcelPage = () => {
 
     return matchesTab && matchesSearch;
   });
+
+  const navigate = useNavigate();
 
   return (
     <div className="w-full bg-white rounded-2xl shadow-sm border border-slate-100 p-6">
@@ -154,6 +157,7 @@ export const ParcelPage = () => {
                           tooltip="Voir détails"
                           icon={<Eye size={16} />}
                           className="hover:text-slate-600"
+                          onClick={() => navigate(`/parcels/${parcel.id}`)} 
                         />
 
                         <ActionButton
