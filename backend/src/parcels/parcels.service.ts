@@ -7,40 +7,77 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateParcelDto } from './dto/create-parcel.dto';
 import { ParcelStatus } from '@prisma/client';
 import { UpdateParcelDto } from './dto/update-parcel-dto';
+import { getParcelStatusMessage } from './utils/get-status-message';
 
 @Injectable()
 export class ParcelsService {
   constructor(private readonly prisma: PrismaService) {}
 
+  async addEvent(params: {
+    parcelId: string;
+    status: ParcelStatus;
+    location: string;
+  }) {
+    const { parcelId, status, location } = params;
+    return this.prisma.trackingHistory.create({
+      data: {
+        parcelId,
+        status,
+        location,
+        note: getParcelStatusMessage(status),
+      },
+    });
+  }
+
   // Create employee and assign
   async create(createParcelDto: CreateParcelDto & { employeeId: string }) {
-    const employed = await this.prisma.user.findUnique({
+    const employee = await this.prisma.user.findUnique({
       where: {
         id: createParcelDto.employeeId,
       },
     });
 
-    if (!employed) {
+    if (!employee) {
       throw new NotFoundException('Employé assigné non trouvé !');
     }
 
     const trackingNumber = this.generateTrackingNumber();
 
-    return this.prisma.parcel.create({
-      data: {
-        trackingNumber,
-        description: createParcelDto.description,
-        weight: createParcelDto.weight,
+    return this.prisma.$transaction(async (tx) => {
+      const parcel = await tx.parcel.create({
+        data: {
+          trackingNumber,
+          description: createParcelDto.description,
+          weight: createParcelDto.weight,
 
-        senderName: createParcelDto.senderName,
-        recipientName: createParcelDto.recipientName,
-        recipientPhone: createParcelDto.recipientPhone,
-        destination: createParcelDto.destination,
+          senderName: createParcelDto.senderName,
+          recipientName: createParcelDto.recipientName,
+          recipientPhone: createParcelDto.recipientPhone,
+          destination: createParcelDto.destination,
 
-        userId: createParcelDto.employeeId,
-      },
+          userId: createParcelDto.employeeId,
+        },
+      });
+
+      await tx.trackingHistory.create({
+        data: {
+          parcelId: parcel.id,
+          status: ParcelStatus.PENDING,
+          location: createParcelDto.destination,
+          note: getParcelStatusMessage(ParcelStatus.PENDING),
+        },
+      });
+
+      return tx.parcel.findUnique({
+        where: { id: parcel.id },
+        include: {
+          trackingHistory: true,
+          user: true,
+        },
+      });
     });
   }
+
   //Dashboard list ass employ
   private generateTrackingNumber() {
     const random = Math.floor(100000 + Math.random() * 900000);
@@ -153,7 +190,7 @@ export class ParcelsService {
           parcelId,
           status,
           location: location ?? 'Non defini',
-          note: note ?? null,
+          note: note ?? getParcelStatusMessage(status),
         },
       });
 
