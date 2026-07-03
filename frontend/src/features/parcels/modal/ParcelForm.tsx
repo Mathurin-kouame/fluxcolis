@@ -1,42 +1,38 @@
-import { useCreateParcel } from "@/hooks/useCreateParcel"
 import { useForm } from "react-hook-form";
-import { createParcelSchema, type CreateParcelFormData } from "../schemas/createParcelSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useUsers } from "@/hooks/useUsers";
 import { Loader2 } from "lucide-react";
+import { ParcelSchema, type ParcelFormData } from "../schemas/createParcelSchema";
 
 
-
-
-interface CreateParcelFormProps {
-    onSuccess?: () => void;
+interface ParcelFormProps {
+    defaultValues?: Partial<ParcelFormData>;
+    onSubmit: (data: ParcelFormData) => void;
+    isPending?: boolean;
+    submitLabel: string;
+    
 }
 
-export const CreateParcelForm = ({ onSuccess }: CreateParcelFormProps) => {
-
-
-    const { mutate, isPending } = useCreateParcel();
+export const ParcelForm = ({defaultValues, onSubmit, isPending, submitLabel }: ParcelFormProps) => {
     const { data: employees } = useUsers();
 
     const employee = employees?.filter(
         (user) => user.role === "EMPLOYEE"
     )
 
-    const { register, handleSubmit, reset, formState: { errors }, } = useForm<CreateParcelFormData>({
-        resolver: zodResolver(createParcelSchema),
+    const { register, handleSubmit, reset, formState: { errors }, } = useForm<ParcelFormData>({
+        resolver: zodResolver(ParcelSchema),
+        defaultValues,
     });
 
-    const onSubmit = (data: CreateParcelFormData) => {
-        mutate(data, {
-            onSuccess: () => {
-                reset();
-                onSuccess?.();
-            }
-        });
+    const handleFormSubmit = (data: ParcelFormData) => {
+        onSubmit(data)
+        reset();
+                    
     };
     return (
         <div>
-            <form onSubmit={handleSubmit(onSubmit)} className="space-y-3" >
+            <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-3" >
                 <div>
                     <input
                         {...register("description")}
@@ -86,10 +82,10 @@ export const CreateParcelForm = ({ onSuccess }: CreateParcelFormProps) => {
                     {isPending ? (
                         <span className="flex items-center justify-center gap-2">
                             <Loader2 className="w-4 h-4 animate-spin" />
-                            Création...
+                            Chargement...
                         </span>
                     ) : (
-                        "créer"
+                       submitLabel
                     )}
 
                 </button>

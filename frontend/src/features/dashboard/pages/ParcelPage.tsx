@@ -1,6 +1,9 @@
 import { ActionButton } from "@/components/ui/ActionButton";
-import { CreateParcelModal } from "@/features/parcels/modal/CreateParcelModal";
+import { CreateParcelForm } from "@/features/parcels/components/CreateParcelForm";
+import { UpdateParcelForm } from "@/features/parcels/components/UpdateParcelForm";
+import { ParcelModal } from "@/features/parcels/modal/ParcelModal";
 import { useParcels } from "@/hooks/useParcels";
+import type { Parcel } from "@/types";
 import { ChevronLeft, ChevronRight, Eye, Loader2, Pencil, Search, SlidersHorizontal, Trash2 } from "lucide-react"
 import { useState } from "react"
 import { useNavigate } from "react-router-dom";
@@ -8,11 +11,19 @@ import { useNavigate } from "react-router-dom";
 export const ParcelPage = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [activeTab, setActiveTab] = useState("ALL");
-  const [isOpen, setIsOpen] = useState(false);
+  //const [isOpen, setIsOpen] = useState(false);
+
+  // CREATE MODAL
+  const [isCreateOpen, setIsCreateOpen] = useState(false);
+
+  //UPDATE MODAL
+  const [isEditOpen, setIsEditOpen] = useState(false);
+  const [selectedParcel, setSelectedParcel] = useState<Parcel | null>(null);
 
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
   const { data: parcels = [], isLoading, isError, error } = useParcels();
+
 
   const parcelTabs = [
     { id: "ALL", label: "Tous", count: parcels.length },
@@ -68,7 +79,7 @@ export const ParcelPage = () => {
             Filtes
           </button>
           <button
-            onClick={() => setIsOpen(true)}
+            onClick={() => setIsCreateOpen(true)}
             className="flex items-center bg-blue-600 text-white rounded-sm text-sm font-semibold hover:bg-blue-700 shadow-sm transition-colors px-4 py-2 gap-2 cursor-pointer">
             Nouveau colis
           </button>
@@ -76,14 +87,41 @@ export const ParcelPage = () => {
       </div>
 
       {/* MODAL */}
-      <CreateParcelModal
-        isOpen={isOpen}
-        setIsOpen={setIsOpen}
-        onSuccess={() => {
-          setSuccessMessage("Colis crée avec succès !");
-          setTimeout(() => setSuccessMessage(null), 3000)
-        }}
-      />
+      <ParcelModal
+        isOpen={isCreateOpen}
+        setIsOpen={setIsCreateOpen}
+        title="Nouveau colis"
+        description="Créez et assignez un colis à un employé"
+      >
+        <CreateParcelForm
+          onSuccess={() => {
+            setIsCreateOpen(false);
+
+            setSuccessMessage("Colis créé avec succès !");
+            setTimeout(() => setSuccessMessage(null), 3000);
+          }}
+        />
+      </ParcelModal>
+
+       {/* UPDATE MODAL */}
+      <ParcelModal
+        isOpen={isEditOpen}
+        setIsOpen={setIsEditOpen}
+        title="Modifier le colis"
+        description="Mettre à jour les informations du colis"
+      >
+        {selectedParcel && (
+          <UpdateParcelForm
+            parcel={selectedParcel}
+            onSuccess={() => {
+              setIsEditOpen(false);
+              setSelectedParcel(null);
+              setSuccessMessage("Colis mise à jour avec succès !");
+              setTimeout(() => setSuccessMessage(null), 3000);
+            }}
+          />
+      )}
+      </ParcelModal>
 
       <div className="flex items-center border border-slate-100 overflow-x-auto scrollbar-none mb-6 gap-6 p-2">
         {parcelTabs.map((parcelTab) => (
@@ -91,8 +129,8 @@ export const ParcelPage = () => {
             key={parcelTab.id}
             onClick={() => setActiveTab(parcelTab.id)}
             className={`pb-3 text-sm font-medium whitespace-nowrap border-b-2 transition-all cursor-pointer ${activeTab === parcelTab.id
-                ? "border-blue-600 text-blue-600 font-semibold"
-                : "border-transparent text-slate-500 hover:text-slate-700"
+              ? "border-blue-600 text-blue-600 font-semibold"
+              : "border-transparent text-slate-500 hover:text-slate-700"
               }`}
           >
             {parcelTab.label}
@@ -157,13 +195,17 @@ export const ParcelPage = () => {
                           tooltip="Voir détails"
                           icon={<Eye size={16} />}
                           className="hover:text-slate-600"
-                          onClick={() => navigate(`/parcels/${parcel.id}`)} 
+                          onClick={() => navigate(`/parcels/${parcel.id}`)}
                         />
 
                         <ActionButton
                           tooltip="Modifier"
                           icon={<Pencil size={16} />}
                           className="hover:text-slate-600"
+                          onClick={() => {
+                            setSelectedParcel(parcel);
+                            setIsEditOpen(true);
+                          }}
                         />
 
                         <ActionButton

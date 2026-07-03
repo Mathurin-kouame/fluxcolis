@@ -1,14 +1,16 @@
 import { X } from "lucide-react";
-import { CreateParcelForm } from "./CreateParcelForm";
+import type { ReactNode } from "react";
 
-interface CreateParcelModalProps {
+interface ParcelModalProps {
     isOpen: boolean;
     setIsOpen: (value: boolean) => void;
-    onSuccess?: () => void;
+    title: string;
+    description: string;
+    children: ReactNode;
 
 }
 
-export const CreateParcelModal = ({ isOpen, setIsOpen, onSuccess }: CreateParcelModalProps) => {
+export const ParcelModal = ({ isOpen, setIsOpen, title, description, children }: ParcelModalProps) => {
     if (!isOpen) return null;
 
     return (
@@ -24,12 +26,13 @@ export const CreateParcelModal = ({ isOpen, setIsOpen, onSuccess }: CreateParcel
                     {/* Header */}
                     <div className="flex items-center justify-between px-6 py-4  text-slate-400">
                         <div>
-                            <h2 className="text-xl font-semibold text-slate-900">Nouveau colis</h2>
+                            <h2 className="text-xl font-semibold text-slate-900">
+                                {title}
+                            </h2>
                             <p className="text-sm text-slate-500 mt-1">
-                                Créez et assignez un colis à un employé
+                                {description}
                             </p>
                         </div>
-
                         <button
                             onClick={() => setIsOpen(false)}
                             className="p-2 rounded-full hover:bg-blue-500 hover:text-white text-blue-500 transition cursor-pointer"
@@ -40,12 +43,7 @@ export const CreateParcelModal = ({ isOpen, setIsOpen, onSuccess }: CreateParcel
 
                     {/* Body */}
                     <div className="p-6">
-                        <CreateParcelForm
-                            onSuccess={() => {
-                                setIsOpen(false);
-                                onSuccess?.();
-                            }}
-                        />
+                        {children}
                     </div>
                 </div>
             </div>

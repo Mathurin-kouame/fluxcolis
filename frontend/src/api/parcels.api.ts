@@ -68,9 +68,9 @@ export const getParcelTrackingHistory = async (id: string): Promise<TrackingHist
     return history;
 }
 
-export const updateParcel = async (id: string, data: UpdateParcelInput ): Promise<Parcel> => {
+export const updateParcel = async (id: string, data: UpdateParcelInput): Promise<Parcel> => {
     const { data: parcel } = await api.patch<Parcel>(`/parcels/${id}`, data );
-
+    console.log("mise a jour:", parcel)
     return parcel;
 }
 

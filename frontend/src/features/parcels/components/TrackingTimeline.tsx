@@ -32,7 +32,7 @@ export const TrackingTimeline = ({ history }: Props) => {
                         
                         <div>
                             <span className="font-semibold text-slate-900">
-                                {item.status === 'PENDING' && 'En attente'}
+                                {item.status === 'PENDING' && 'Colis enregistré'}
                                 {item.status === 'IN_TRANSIT' && 'En transit'}
                                 {item.status === 'DELIVERED' && 'Livré'}
                                 {item.status === 'CANCELLED' && 'Annulé'}
@@ -44,12 +44,13 @@ export const TrackingTimeline = ({ history }: Props) => {
 
                         {/* Colonne 2 : Date et heure formatées */}
                         <div>
-                            {new Date(item.createdAt).toLocaleDateString('fr-FR', {
+                            {new Date(item.createdAt).toLocaleDateString('fr-FR', { 
                                 day: '2-digit',
                                 month: '2-digit',
                                 year: 'numeric',
                                 hour: '2-digit',
-                                minute: '2-digit'
+                                minute: '2-digit',
+                                second: '2-digit'
                             })}
                         </div>
 
