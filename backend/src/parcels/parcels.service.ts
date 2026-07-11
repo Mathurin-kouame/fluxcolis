@@ -8,6 +8,7 @@ import { CreateParcelDto } from './dto/create-parcel.dto';
 import { ParcelStatus } from '@prisma/client';
 import { UpdateParcelDto } from './dto/update-parcel-dto';
 import { getParcelStatusMessage } from './utils/get-status-message';
+import { DEFAULT_LOCATION } from './constants/parcel.constants';
 
 @Injectable()
 export class ParcelsService {
@@ -63,7 +64,7 @@ export class ParcelsService {
         data: {
           parcelId: parcel.id,
           status: ParcelStatus.PENDING,
-          location: createParcelDto.destination,
+          location: DEFAULT_LOCATION,
           note: getParcelStatusMessage(ParcelStatus.PENDING),
         },
       });
@@ -189,7 +190,7 @@ export class ParcelsService {
         data: {
           parcelId,
           status,
-          location: location ?? 'Non defini',
+          location: DEFAULT_LOCATION,
           note: note ?? getParcelStatusMessage(status),
         },
       });
@@ -292,6 +293,9 @@ export class ParcelsService {
           description: updateParcelDto.description,
         }),
         ...(updateParcelDto.weight && { weight: updateParcelDto.weight }),
+        ...(updateParcelDto.senderName && {
+          senderName: updateParcelDto.senderName,
+        }),
         ...(updateParcelDto.destination && {
           destination: updateParcelDto.destination,
         }),
@@ -300,6 +304,9 @@ export class ParcelsService {
         }),
         ...(updateParcelDto.recipientPhone && {
           recipientPhone: updateParcelDto.recipientPhone,
+        }),
+        ...(updateParcelDto.userId && {
+          userId: updateParcelDto.userId,
         }),
       },
     });

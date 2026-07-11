@@ -5,18 +5,25 @@ import { ParcelForm } from "../modal/ParcelForm";
 import { getParcelDefaultValues } from "../utils/getParcelDefaultValues";
 
 
+
 type UpdateParcelFormProps = {
     parcel: Parcel;
     onSuccess?: () => void
 }
-export const UpdateParcelForm = ({ parcel, onSuccess }:UpdateParcelFormProps) => {
+export const UpdateParcelForm = ({ parcel, onSuccess }: UpdateParcelFormProps) => {
+    
     const { mutate, isPending } = useUpdateParcel();
 
-    const handleSubmit = (data: UpdateParcelInput) => {
+    const handleSubmit = ( data: UpdateParcelInput) => {
+        console.log("Données envoyées :", data);
+
+        
+        
         mutate(
             {
                 id: parcel.id,
-                data,
+                data
+              
             }, {
                 onSuccess: () =>  onSuccess?.(),
                                   

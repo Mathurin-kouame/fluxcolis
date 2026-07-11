@@ -11,6 +11,10 @@ export class UpdateParcelDto {
 
   @IsOptional()
   @IsString()
+  senderName?: string;
+
+  @IsOptional()
+  @IsString()
   destination?: string;
 
   @IsOptional()
@@ -20,4 +24,8 @@ export class UpdateParcelDto {
   @IsOptional()
   @IsString()
   recipientPhone?: string;
+
+  @IsOptional()
+  @IsString()
+  userId?: string;
 }

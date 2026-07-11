@@ -53,6 +53,7 @@ export interface UpdateParcelInput {
   recipientName?: string;
   recipientPhone?: string;
   destination?: string;
+  employeeId: string;
 }
 
 export interface LoginInput {

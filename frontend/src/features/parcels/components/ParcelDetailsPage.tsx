@@ -68,8 +68,8 @@ export const ParcelDetailsPage = () => {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-          <div className="border border-slate-100 rounded-xl  p-5 mb-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-2 mb-3">
+          <div className="border border-slate-100 rounded-xl  p-5 mb-3">
             <h2 className="font-semibold text-900 mb-3 text-sm">Expéditeur</h2>
             <div className="text-sm text-slate-600 space-y-1">
               <p>{parcel.senderName}</p>
@@ -77,11 +77,11 @@ export const ParcelDetailsPage = () => {
             </div>
           </div>
 
-           <div className="border border-slate-100 rounded-xl  p-5 mb-6">
+           <div className="border border-slate-100 rounded-xl  p-5 mb-3">
             <h2 className="font-semibold text-900 mb-3 text-sm">Destinataire</h2>
             <div className="text-sm text-slate-600 space-y-1">
               <p>{parcel.recipientName}</p>
-              <p>{parcel.destination}</p>
+               <p>{parcel.destination}</p>
             </div>
           </div>
         </div>

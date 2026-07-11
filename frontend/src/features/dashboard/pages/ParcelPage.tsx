@@ -1,7 +1,9 @@
+import { ConfirmDialog } from "@/components/shared/ConfirmDialog";
 import { ActionButton } from "@/components/ui/ActionButton";
 import { CreateParcelForm } from "@/features/parcels/components/CreateParcelForm";
 import { UpdateParcelForm } from "@/features/parcels/components/UpdateParcelForm";
 import { ParcelModal } from "@/features/parcels/modal/ParcelModal";
+import { useDeleteParcel } from "@/hooks/useDeleteParcel";
 import { useParcels } from "@/hooks/useParcels";
 import type { Parcel } from "@/types";
 import { ChevronLeft, ChevronRight, Eye, Loader2, Pencil, Search, SlidersHorizontal, Trash2 } from "lucide-react"
@@ -11,7 +13,8 @@ import { useNavigate } from "react-router-dom";
 export const ParcelPage = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [activeTab, setActiveTab] = useState("ALL");
-  //const [isOpen, setIsOpen] = useState(false);
+  const [isDeleteOpen, setIsDeleteOpen] = useState(false);
+  const [selectedParcelId, setSelectedParcelId] = useState<string | null>(null)
 
   // CREATE MODAL
   const [isCreateOpen, setIsCreateOpen] = useState(false);
@@ -21,9 +24,28 @@ export const ParcelPage = () => {
   const [selectedParcel, setSelectedParcel] = useState<Parcel | null>(null);
 
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
-
+  
   const { data: parcels = [], isLoading, isError, error } = useParcels();
 
+  const { mutate: deleteParcel, isPending} = useDeleteParcel();
+  
+  const handleDeleteClick = (id: string) => {
+    setSelectedParcelId(id)
+   setIsDeleteOpen(true)
+  }
+
+  const handleConfirmDelete = () => {
+    if (!selectedParcelId) return;
+
+    deleteParcel(selectedParcelId, {
+      onSuccess: () => {
+        setIsDeleteOpen(false);
+        setSelectedParcelId(null)
+        setSuccessMessage("Colis supprimé avec succès");
+        setTimeout(() => setSuccessMessage(null), 3000);
+      }
+    })
+  }
 
   const parcelTabs = [
     { id: "ALL", label: "Tous", count: parcels.length },
@@ -96,7 +118,6 @@ export const ParcelPage = () => {
         <CreateParcelForm
           onSuccess={() => {
             setIsCreateOpen(false);
-
             setSuccessMessage("Colis créé avec succès !");
             setTimeout(() => setSuccessMessage(null), 3000);
           }}
@@ -122,6 +143,17 @@ export const ParcelPage = () => {
           />
       )}
       </ParcelModal>
+      
+      <ConfirmDialog
+        open={isDeleteOpen}
+        title="Supprimer le colis"
+        description="Ce colis et son historique seront supprimés"
+        confirmText="Supprimer"
+        cancelText="Annuler"
+        isPending={isPending}
+        onClose={() => setIsDeleteOpen(false) }
+        onConfirm={handleConfirmDelete}
+      />
 
       <div className="flex items-center border border-slate-100 overflow-x-auto scrollbar-none mb-6 gap-6 p-2">
         {parcelTabs.map((parcelTab) => (
@@ -212,6 +244,7 @@ export const ParcelPage = () => {
                           tooltip="Supprimer"
                           icon={<Trash2 size={16} />}
                           className="hover:text-slate-600"
+                          onClick={() => handleDeleteClick(parcel.id)}
                         />
                       </div>
                     </td>
