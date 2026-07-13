@@ -16,13 +16,12 @@ export const getAllParcels = async (): Promise<Parcel[]> => {
 
 export const searchParcelByTracking = async (trackingNumber: string): Promise<Parcel> =>{
     const { data: parcel } = await api.get<Parcel>(`/parcels/search/${trackingNumber}`);
-
     return parcel;
 }
 
 export const getLatestParcels = async ():Promise<LatestParcelRow[]> => {
     const { data: parcels } = await api.get<LatestParcelRow[]>("/parcels/dashboard/latest");
-    console.log("DENIER_COLIS:", parcels)
+    console.log("DENIER_COLIS:", parcels);
     return parcels;
 }
 
