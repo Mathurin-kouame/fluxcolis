@@ -53,7 +53,6 @@ export class ParcelsController {
 
   @Get('dashboard/latest')
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles('ADMIN')
   getLatestParcels(@Request() req: RequestWithUser) {
     return this.parcelsService.getLatestParcels(req.user.userId, req.user.role);
   }
