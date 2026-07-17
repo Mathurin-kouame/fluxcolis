@@ -3,10 +3,12 @@ import { ActionButton } from "@/components/ui/ActionButton";
 import { CreateParcelForm } from "@/features/parcels/components/CreateParcelForm";
 import { UpdateParcelForm } from "@/features/parcels/components/UpdateParcelForm";
 import { ParcelModal } from "@/features/parcels/modal/ParcelModal";
+import { useAuth } from "@/hooks/useAuth";
 import { useDeleteParcel } from "@/hooks/useDeleteParcel";
 import { useParcels } from "@/hooks/useParcels";
+import { useUpdateParcelStatus } from "@/hooks/useUpdateParcelStatus";
 import type { Parcel } from "@/types";
-import { ChevronLeft, ChevronRight, Eye, Loader2, Pencil, Search, SlidersHorizontal, Trash2 } from "lucide-react"
+import { CheckCircle, ChevronLeft, ChevronRight, Eye, Loader2, Pencil, Search, SlidersHorizontal, Trash2, Truck } from "lucide-react"
 import { useState } from "react"
 import { useNavigate } from "react-router-dom";
 
@@ -24,10 +26,16 @@ export const ParcelPage = () => {
   const [selectedParcel, setSelectedParcel] = useState<Parcel | null>(null);
 
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
+
+  const { user } = useAuth();
+  const isAdmin = user?.role === 'ADMIN';
+  const isEmployee = user?.role === 'EMPLOYEE';
   
   const { data: parcels = [], isLoading, isError, error } = useParcels();
 
-  const { mutate: deleteParcel, isPending} = useDeleteParcel();
+  const { mutate: deleteParcel, isPending } = useDeleteParcel();
+  
+  const {mutate: updateStatus, isPending: isUpdatingStatus} = useUpdateParcelStatus();
   
   const handleDeleteClick = (id: string) => {
     setSelectedParcelId(id)
@@ -100,11 +108,14 @@ export const ParcelPage = () => {
             <SlidersHorizontal size={16} />
             Filtes
           </button>
-          <button
-            onClick={() => setIsCreateOpen(true)}
-            className="flex items-center bg-blue-600 text-white rounded-sm text-sm font-semibold hover:bg-blue-700 shadow-sm transition-colors px-4 py-2 gap-2 cursor-pointer">
-            Nouveau colis
+          {isAdmin && (
+              <button
+              onClick={() => setIsCreateOpen(true)}
+              className="flex items-center bg-blue-600 text-white rounded-sm text-sm font-semibold hover:bg-blue-700 shadow-sm transition-colors px-4 py-2 gap-2 cursor-pointer">
+              Nouveau colis
           </button>
+          )}
+         
         </div>
       </div>
 
@@ -230,7 +241,10 @@ export const ParcelPage = () => {
                           onClick={() => navigate(`/parcels/${parcel.id}`)}
                         />
 
-                        <ActionButton
+                         {/* ADMIN */}
+                        {isAdmin && (
+                          <>
+                            <ActionButton
                           tooltip="Modifier"
                           icon={<Pencil size={16} />}
                           className="hover:text-slate-600"
@@ -246,6 +260,41 @@ export const ParcelPage = () => {
                           className="hover:text-slate-600"
                           onClick={() => handleDeleteClick(parcel.id)}
                         />
+                          </>
+                        )}
+
+                      {/* EMPLOYEE */}
+                        {isEmployee &&
+                          parcel.status === "PENDING" && (
+                          <ActionButton
+                            tooltip="Commencer la livraison"
+                            icon={<Truck size={16} />}
+                            className="hover:text-purple-600"
+                            disabled={isUpdatingStatus}
+                            onClick={() => 
+                              updateStatus({
+                                id: parcel.id,
+                                status: "IN_TRANSIT",
+                              })
+                            }
+                          />
+                          )}
+                        {isEmployee && 
+                          parcel.status === "IN_TRANSIT" && (
+                          <ActionButton
+                            tooltip="Marque comme livré"
+                            icon={<CheckCircle size={16} />}
+                            className="hover:text-green-600"
+                            disabled={isUpdatingStatus}
+                            onClick={() => 
+                              updateStatus({
+                                id: parcel.id,
+                                status: "DELIVERED"
+                              })
+                            }
+                          />
+                          )
+                        }
                       </div>
                     </td>
                   </tr>

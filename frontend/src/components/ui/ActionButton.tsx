@@ -6,6 +6,7 @@ interface ActionButtonProps {
     icon: ReactNode;
     className?: string;
     onClick?: () => void;
+    disabled?: boolean;
 }
 
 
