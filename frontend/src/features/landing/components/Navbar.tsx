@@ -1,11 +1,11 @@
 import { Box } from "lucide-react"
 import { NAV_LINK } from "../constants/navigation"
 import { useAuth } from "../../../hooks/useAuth"
-import { useNavigate } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 
 
 export const Navbar = () => {
-    const {  isAuthenticated } = useAuth();
+    const { isAuthenticated } = useAuth();
     const navigate = useNavigate();
 
     return (
@@ -22,10 +22,25 @@ export const Navbar = () => {
                 <ul className="hidden lg:flex items-center gap-8">
                     {NAV_LINK.map((link) => (
                         <li key={link.label}>
-                            <a
-                                href={link.label} className="text-sm font-sm medium  hover:text-blue-700 transition-colors">
-                                {link.label}
-                            </a>
+                            {
+                                link.type === "route" ? (
+                                    <NavLink
+                                        to={link.path}
+                                        className={({ isActive }) =>
+                                         isActive ? "text-blue-600 hover:b-blue-600" : "text-slate-600"
+                                        }
+                                    >
+                                      {link.label}  
+                                  </NavLink>  
+                                ) : (
+                                        <a href={link.path}
+                                        className="text-slate-800 hover:text-blue-600"
+                                        >
+                                       {link.label}     
+                                  </a>      
+                              ) 
+                            }
+                            
                         </li>
                     ))}
                 </ul>

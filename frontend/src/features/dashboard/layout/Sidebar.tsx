@@ -17,7 +17,7 @@ export const Sidebar = ({ isOpen, setIsOpen}: SidebarProps) => {
         {label: "Tableau de bord", path: "/dashboard", icon: LayoutDashboard},
         {label: "Colis", path: "/dashboard/colis", icon: Package},
         {label: "Expéditions", path: "/dashboard/expeditions", icon: Send},
-        {label: "Dstinataires", path: "/dashboard/destinataires", icon: Users},
+        {label: "Destinataires", path: "/dashboard/destinataires", icon: Users},
         {label: "Réclamations", path: "/dashboard/reclamations", icon: MessageSquare},
         {label: "Rapports", path: "/dashboard/rapports", icon: BarChart3},
         {label: "Paramètres", path: "/dashboard/settings", icon: Settings},

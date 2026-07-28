@@ -2,15 +2,24 @@ import { Box, Building2, ChartNoAxesCombined, Settings, ShieldCheck, Smile, User
 
 export interface NavLink {
     label: string;
-    href: string;
+    path: string;
+    type: "route" | "anchor"
 }
 
+export interface StatCardProps {
+  title: string;
+  value: string | number;
+  color: string;
+}
+
+
 export const NAV_LINK: NavLink[] = [
-    { label: "Accueil", href: "#" },
-    { label: "Fonctionnalité", href: "#features" },
-    { label: "Tarifs", href: "#pricing" },
-    { label: "A propos", href: "#about" },
-    { label: "Contact", href: "#contact" },
+    { label: "Accueil", path: "/", type:"anchor" },
+    { label: "Fonctionnalité", path: "#features", type:"anchor" },
+    { label: "Tarifs", path: "#pricing", type:"anchor" },
+    { label: "A propos", path: "#about" , type:"anchor"},
+    { label: "Contact", path: "#contact",  type:"anchor"},
+    { label: "Suivi", path: "/tracking" , type:"route"},
 ];
 
 export const STATS = [
@@ -25,11 +34,13 @@ export const STATS = [
         subtitle: "Utilisateurs actifs",
         icon: Users,
     },
+
     {
         title: "500+",
         subtitle: "Entreprises",
         icon: Building2,
     },
+    
     {
         title: "98%",
         subtitle: "Satisfaction",
@@ -70,9 +81,4 @@ export const FEATURES = [
     }
 ]
 
-export interface StatCardProps {
-  title: string;
-  value: string | number;
-  color: string;
-}
 

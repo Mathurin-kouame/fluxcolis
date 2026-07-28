@@ -9,21 +9,21 @@ const Home = () => {
     return (
         <div>
             <Navbar />
-            <div className="bg-blue-500/5">
+            <section id="home" className="bg-blue-500/5">
               <HeroSection />
-            </div>
-            <div>
+            </section>
+            <section id="pricing">
                 <StatsSection />
-            </div>
-            <div>
+            </section>
+            <section id="features">
                 <FeaturesSection />
-            </div>
-            <div>
+            </section>
+            <section id="cta">
                 <CtaSection />
-            </div>
-            <div>
+            </section>
+            <section id="footer">
                 <Footer />
-            </div>
+            </section>
         </div>
  )
 }
