@@ -12,7 +12,9 @@ const Home = () => {
             <section id="home" className="bg-blue-500/5">
               <HeroSection />
             </section>
-            <section id="pricing">
+            <section id="pricing"
+            className="scroll-mt-24"
+            >
                 <StatsSection />
             </section>
             <section id="features">
