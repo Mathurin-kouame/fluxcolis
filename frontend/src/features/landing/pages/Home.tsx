@@ -3,7 +3,7 @@ import { FeaturesSection } from "../components/FeaturesSection";
 import { Footer } from "../components/Footer";
 import { HeroSection } from "../components/HeroSection";
 import { Navbar } from "../components/Navbar";
-import { StatsSection } from "../components/StatsSection";
+
 
 const Home = () => {
     return (
@@ -12,11 +12,7 @@ const Home = () => {
             <section id="home" className="bg-blue-500/5">
               <HeroSection />
             </section>
-            <section id="pricing"
-            className="scroll-mt-24"
-            >
-                <StatsSection />
-            </section>
+           
             <section id="features">
                 <FeaturesSection />
             </section>

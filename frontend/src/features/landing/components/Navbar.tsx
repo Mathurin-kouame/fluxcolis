@@ -83,18 +83,18 @@ export const Navbar = () => {
                 <div className=" flex items-center gap-3 sm:gap-3">
 
                     {!isAuthenticated && (
-                        <>
+                        <div className="hidden lg:flex">
                             <button
                                 onClick={() => navigate("/connexion")}
-                                className=" hidden md:flex px-4 py-2.5 rounded-xl border border-slate-300 bg-white hover:text-blue-600 transition-all text-sm font-semibold cursor-pointer">
+                                className="px-4 py-2.5 rounded-xl border border-slate-300 bg-white hover:text-blue-600 transition-all text-sm font-semibold cursor-pointer">
                                 se connecter
                             </button>
                             <button
                                 onClick={() => navigate("/inscription")}
-                                className="hidden sm:flex px-4 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 transition-all text-white text-sm font-semibold shadow-lg shadow-blue-500/20 cursor-pointer">
+                                className="px-4 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 transition-all text-white text-sm font-semibold shadow-lg shadow-blue-500/20 cursor-pointer">
                                 commencer
                             </button>
-                        </>
+                        </div>
                     )}
 
                     {/* Hamburger Mobile */}
@@ -109,7 +109,7 @@ export const Navbar = () => {
 
             {/* Menu Mobile */}
             <div className={`lg:hidden overflow-hidden transition-all duration-300 ${isOpen
-                    ? "max-h-125 border-t border-slate-200 "
+                    ? "max-h-125 border-t border-slate-200"
                     : "max-h-0"
                 }`}
             >

@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button"
-import { ArrowRight, SquarePlay } from "lucide-react"
+import { ArrowRight } from "lucide-react"
 
 
 export const CtaSection = () => {
@@ -20,12 +20,7 @@ export const CtaSection = () => {
                                  <ArrowRight className="w-4 h-4 mr-2" />
                                 Commencer gratuitement
                             </Button>
-                            <Button
-                                variant="secondary"
-                            >
-                                 <SquarePlay className="w-4 h-4 mr-2" />
-                                Demander démo
-                            </Button>
+    
                         </div>
                     </div>
                 </div>
