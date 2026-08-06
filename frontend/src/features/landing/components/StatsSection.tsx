@@ -14,7 +14,7 @@ export const StatsSection = () => {
                             <Icon className="text-blue-600" />    
                             </div>
                             <h3 className="text-2xl font-bold mb-2">{stat.title}</h3>
-                            <p className="text-slate-600">{ stat.subtitle}</p>
+                            <p className="text-slate-600">{ stat.subtitle}</p> 
                         </div>
                     )
               })}

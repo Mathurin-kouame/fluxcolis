@@ -16,7 +16,6 @@ export interface StatCardProps {
 export const NAV_LINK: NavLink[] = [
     { label: "Accueil", path: "#home", type:"anchor" },
     { label: "Fonctionnalité", path: "#features", type:"anchor" },
-    { label: "Tarifs", path: "#pricing", type:"anchor" },
     { label: "A propos", path: "#about" , type:"anchor"},
     { label: "Contact", path: "#contact",  type:"anchor"},
     { label: "Suivi", path: "/tracking" , type:"route"},

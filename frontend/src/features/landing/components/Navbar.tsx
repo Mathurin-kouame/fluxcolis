@@ -80,10 +80,10 @@ export const Navbar = () => {
                 </ul>
 
                 {/* Actions */}
-                <div className="flex items-center gap-3 sm:gap-3">
+                <div className="flex items-center gap-3 sm:gap-3 lg:gap-3">
 
                     {!isAuthenticated && (
-                        <div className="hidden lg:flex">
+                        <div className="hidden lg:flex gap-3">
                             <button
                                 onClick={() => navigate("/connexion")}
                                 className="px-4 py-2.5 rounded-xl border border-slate-300 bg-white hover:text-blue-600 transition-all text-sm font-semibold cursor-pointer">
@@ -155,7 +155,7 @@ export const Navbar = () => {
                                     navigate("/connexion");
                                     setIsOpen(false);
                                 }}
-                                className="w-full py-2.5 rounded-xl border border-slate-300 font-semibold"
+                                className="w-full py-3 rounded-xl border border-slate-300 font-semibold"
                             >
                                 Se connecter
                             </button>
@@ -165,7 +165,7 @@ export const Navbar = () => {
                                     navigate("/inscription");
                                     setIsOpen(false);
                                 }}
-                                className="w-full py-2.5 rounded-xl bg-blue-600 text-white font-semibold"
+                                className="w-full py-3 rounded-xl bg-blue-600 text-white font-semibold"
                             >
                                 Commencer
                             </button>
