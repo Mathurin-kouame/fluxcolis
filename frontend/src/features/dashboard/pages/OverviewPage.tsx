@@ -4,6 +4,7 @@ import { StatCard } from "../../../components/ui/StatCard"
 import { useDashboard } from "../../../hooks/useDashboard";
 import { DateRangePicker } from "../components/DateRangePicker";
 import { useLatestParcels } from "@/hooks/useLatestParcels"
+import { ParcelStatusChart } from "../components/ParcelStatusChart";
 
 
 
@@ -74,11 +75,16 @@ export const OverviewPage = () => {
                 />
             </div>
             {/* Zone graphique */}
-            {/* <div className="rounded-2xl border border-dashed border-slate-200 bg-white h-80 flex items-center justify-center text-slate-400">
-                Graphiques à venir
-            </div> */}
-            <div>
+            
+            <div className="grid gap-3 xl:grid-cols-2">
+                <ParcelStatusChart
+                    pending={stats?.pending ?? 0}
+                    inTransit={stats?.inTransit ?? 0}
+                    delivered={stats?.delivered ?? 0}
+                    cancelled={stats?.cancelled ?? 0}
+                />
 
+               
             </div>
 
             {/* Tableau */}
