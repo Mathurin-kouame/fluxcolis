@@ -98,6 +98,12 @@ export class ParcelsController {
     return this.parcelsService.getEmployeeDashboardStats(req.user.userId);
   }
 
+  @Get('dashboard/evolution')
+  @Roles('ADMIN', 'EMPLOYEE')
+  getDashboardEvolution() {
+    return this.parcelsService.getDashboardEvolution();
+  }
+
   @Get('public/:trackingNumber')
   publicTracking(@Param('trackingNumber') trackingNumber: string) {
     return this.parcelsService.publicTracking(trackingNumber);

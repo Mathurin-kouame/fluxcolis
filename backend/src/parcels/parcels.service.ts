@@ -9,6 +9,7 @@ import { ParcelStatus } from '@prisma/client';
 import { UpdateParcelDto } from './dto/update-parcel-dto';
 import { getParcelStatusMessage } from './utils/get-status-message';
 import { DEFAULT_LOCATION } from './constants/parcel.constants';
+import { EvolutionData } from './types/type';
 
 @Injectable()
 export class ParcelsService {
@@ -421,6 +422,52 @@ export class ParcelsService {
       delivered,
       cancelled,
     };
+  }
+
+  //Dashboard evolution
+  async getDashboardEvolution() {
+    const sevenDayAgo = new Date();
+    sevenDayAgo.setDate(sevenDayAgo.getDate() - 6);
+
+    const parcels = await this.prisma.parcel.findMany({
+      where: {
+        createdAt: {
+          gte: sevenDayAgo,
+        },
+      },
+      select: {
+        createdAt: true,
+      },
+    });
+
+    const evolutionMap = new Map<string, number>();
+
+    parcels.forEach((parcel) => {
+      const date = parcel.createdAt.toISOString().split('T')[0];
+
+      evolutionMap.set(date, (evolutionMap.get(date) ?? 0) + 1);
+    });
+
+    console.log(parcels);
+    const evolution: EvolutionData[] = [];
+
+    for (let i = 6; i >= 0; i--) {
+      const currentDate = new Date();
+
+      currentDate.setDate(currentDate.getDate() - i);
+
+      const isoDate = currentDate.toISOString().split('T')[0];
+
+      evolution.push({
+        date: currentDate.toLocaleDateString('fr-FR', {
+          day: '2-digit',
+          month: '2-digit',
+        }),
+        total: evolutionMap.get(isoDate) ?? 0,
+      });
+    }
+
+    return evolution;
   }
 
   //Tracking public
