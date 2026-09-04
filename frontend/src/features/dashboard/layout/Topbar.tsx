@@ -38,26 +38,29 @@ export const Topbar = ({ user }: TopbarProps) => {
     }, [])
     
     return (
-        <header className="h-15 bg-white flex items-center justify-end px-8 shrink-0">
+        <header className="sticky top-0 z-40 h-16 bg-white/95 backdrop-blur-md border-b border-slate-200 px-3 sm:px-4 md:px-6 lg:px-8 flex items-center justify-between shadow-sm">
 
             {/* boutton Action Déconnexion de sécuritée secret à droit */}
-            <div className="flex items-center gap-4 relative">
+            <div className="ml-auto flex items-center gap-4">
                 {/* Profile dropdown */}
-                <div className="relative" ref={dropdownRef}>
+                <div
+                    className="relative"
+                    ref={dropdownRef}>
 
                     <button
                        onClick={() => setOpenProfile((prev) => !prev)}
-                        className="flex items-center  p-2 rounded-full  hover:bg-blue-100  transition"
+                        className="flex items-center  rounded-full  hover:bg-blue-100  transition-all duration-200"
                     >
-                        <div className="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-600 text-sm font-bold">
+                        <div 
+                            className="w-9 h-9 rounded-full bg-slate-100 flex items-center justify-center text-slate-600 text-sm font-bold">
                             {initials}
                         </div>
 
-                        <div className="text-left leading-tight">
+                        <div className="hidden sm:block text-left leading-tight">
                             {/* <p className="text-xs font-bold text-slate-900 truncate">
                                 {user.firstName}
                             </p> */}
-                            <p className="text-[10px] text-slate-400 truncate">
+                            <p className="text-xs text-slate-400 truncate">
                                 {user.role}
                             </p>
                         </div>
@@ -78,8 +81,9 @@ export const Topbar = ({ user }: TopbarProps) => {
                                     {user.email}
                                 </p>
                             </div>
-                            <div className="p-1">
-                                <button className="flex items-center gap-2 w-full px-3 py-2 text-sm hover:bg-slate-50 rounded-lg">
+                            <div className="">
+                                <button
+                                    className="flex items-center gap-2 w-full px-3 py-2 text-sm text-slate-700 hover:bg-slate-50 rounded-lg  transition-colors">
                                     <User size={16} />
                                     Mon Profile
                                 </button>

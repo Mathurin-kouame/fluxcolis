@@ -12,7 +12,7 @@ export const useMe = () => {
     return useQuery({
         queryKey: ["me"],
         queryFn: getMe,
-         enabled: !!localStorage.getItem("token"),
+        // enabled: !!localStorage.getItem("token"),
          retry: false,
     });
 }

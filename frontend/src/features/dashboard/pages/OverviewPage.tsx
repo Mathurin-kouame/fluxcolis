@@ -33,10 +33,12 @@ export const OverviewPage = () => {
     }
     console.log("lastParcels", lastParcels);
     return (
-        <div className="space-y-8 p-8">
+        <div className="space-y-8 p-8 overflow-scroll">
 
             <div className="flex items-center justify-between">
-                <h1 className="text-xl font-bold text-slate-900">Tableau de bord</h1>
+                <h1 className="text-xl font-bold text-slate-900">
+                    Tableau de bord
+                </h1>
                 <DateRangePicker />
             </div>
             <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-5">

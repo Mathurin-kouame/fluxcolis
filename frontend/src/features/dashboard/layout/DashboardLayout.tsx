@@ -38,7 +38,7 @@ export const DashboardLayout = () => {
                 />
             
                 {/* Contenu de la page active */}
-                <main className="flex-1 overflow-y-hidden">
+                <main className="flex-1 overflow-y-auto overflow-x-hidden">
                     <div>
                          < Outlet />
                     </div>
