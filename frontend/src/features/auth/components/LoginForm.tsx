@@ -9,7 +9,7 @@ import { useNavigate } from "react-router-dom";
 
 export const LoginForm = () => {
     const [showPassword, setShowPassword] = useState(false);
-    const [loginError, setLoginError] = useState("")
+    const [loginError, setLoginError] = useState("");
 
     const navigate = useNavigate();
 
